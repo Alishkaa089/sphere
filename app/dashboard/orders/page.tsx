@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { CalendarCheck, Search, CheckCircle2, DownloadCloud } from "lucide-react";
+import { CalendarCheck, Search, CheckCircle2, DownloadCloud, User, Mail, Calendar, Tag } from "lucide-react";
 import { useLanguage } from "@/context/LanguageContext";
-
 import { getAllOrdersAdmin } from "@/lib/actions";
 
 export default function AdminOrdersPage() {
@@ -24,16 +23,23 @@ export default function AdminOrdersPage() {
      loadData();
    }, []);
 
-   const filtered = orders.filter(i => i.title?.toLowerCase().includes(search.toLowerCase()) || i.id?.toLowerCase().includes(search.toLowerCase()));
+   const filtered = orders.filter(i => 
+     i.title?.toLowerCase().includes(search.toLowerCase()) || 
+     i.id?.toLowerCase().includes(search.toLowerCase()) ||
+     i.user?.name?.toLowerCase().includes(search.toLowerCase()) ||
+     i.user?.email?.toLowerCase().includes(search.toLowerCase())
+   );
+
+   if (loading) return <div className="p-12 text-white font-black uppercase tracking-widest">Yüklənir...</div>;
 
    return (
       <div className="p-8 lg:p-12">
          <header className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
             <div>
                <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-4xl font-black text-white tracking-tight mb-2 flex items-center gap-3">
-                 <CalendarCheck className="w-8 h-8 text-emerald-500" /> {t.admin_orders_title}
+                 <CalendarCheck className="w-8 h-8 text-[#006B8A]" /> Sifarişlərin İdarəedilməsi
                </motion.h1>
-               <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-slate-400 font-medium">{t.admin_orders_subtitle}</motion.p>
+               <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-slate-500 font-medium tracking-wide uppercase text-xs">Sistemdəki bütün satış və icarə əməliyyatlarına nəzarət edin</motion.p>
             </div>
             
             <div className="flex items-center gap-4">
@@ -43,53 +49,79 @@ export default function AdminOrdersPage() {
                    type="text" 
                    value={search}
                    onChange={(e) => setSearch(e.target.value)}
-                   placeholder={t.admin_orders_search_ph} 
-                   className="pl-12 pr-4 py-3 bg-black/40 border border-white/10 rounded-full focus:outline-none focus:border-red-500 text-white min-w-[250px]"
+                   placeholder="Məhsul, Müştəri və ya Email..." 
+                   className="pl-12 pr-6 py-4 bg-zinc-900 border border-white/10 rounded-2xl focus:outline-none focus:border-[#006B8A] text-white min-w-[320px] shadow-2xl transition-all"
                  />
                </div>
-               <button className="bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold py-3 px-6 rounded-full flex items-center gap-2 transition-colors">
-                  <DownloadCloud className="w-5 h-5" /> {t.admin_orders_btn_export} 
-               </button>
             </div>
          </header>
 
-         <div className="bg-black/30 border border-white/5 rounded-3xl p-6 shadow-2xl overflow-hidden">
+         <div className="bg-zinc-900/40 backdrop-blur-3xl border border-white/5 rounded-[40px] p-8 shadow-2xl overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left whitespace-nowrap">
                  <thead>
                     <tr className="border-b border-white/10 text-slate-500">
-                       <th className="pb-4 font-black uppercase text-xs tracking-widest px-4">{t.admin_orders_th_img}</th>
-                       <th className="pb-4 font-black uppercase text-xs tracking-widest px-4">{t.admin_orders_th_product}</th>
-                       <th className="pb-4 font-black uppercase text-xs tracking-widest px-4">{t.admin_orders_th_type}</th>
-                       <th className="pb-4 font-black uppercase text-xs tracking-widest px-4">{t.admin_orders_th_amount}</th>
-                       <th className="pb-4 font-black uppercase text-xs tracking-widest px-4">{t.admin_orders_th_date}</th>
-                       <th className="pb-4 font-black uppercase text-xs tracking-widest px-4">{t.admin_orders_th_status}</th>
+                       <th className="pb-6 font-black uppercase text-[10px] tracking-widest px-4">MƏHSUL</th>
+                       <th className="pb-6 font-black uppercase text-[10px] tracking-widest px-4">ALICI MƏLUMATLARI</th>
+                       <th className="pb-6 font-black uppercase text-[10px] tracking-widest px-4">ƏMƏLİYYAT NÖVÜ</th>
+                       <th className="pb-6 font-black uppercase text-[10px] tracking-widest px-4">MƏBLƏĞ</th>
+                       <th className="pb-6 font-black uppercase text-[10px] tracking-widest px-4">TARİX / MÜDDƏT</th>
+                       <th className="pb-6 font-black uppercase text-[10px] tracking-widest px-4">STATUS</th>
                     </tr>
                  </thead>
-                 <tbody>
+                 <tbody className="divide-y divide-white/5">
                     {filtered.map((item, idx) => (
-                       <tr key={idx} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                          <td className="py-4 px-4">
-                             <div className="w-16 h-12 rounded-lg overflow-hidden border border-white/10 relative">
-                               <img src={item.img} alt="img" className="w-full h-full object-cover" />
+                       <tr key={item.id} className="hover:bg-white/5 transition-all group">
+                          <td className="py-6 px-4">
+                             <div className="flex items-center gap-4">
+                               <div className="w-14 h-14 rounded-2xl overflow-hidden border border-white/10 relative flex-shrink-0">
+                                 <img src={item.img || "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg"} alt="img" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                               </div>
+                               <div>
+                                  <div className="text-xs font-black text-[#00A3CC] uppercase tracking-tighter mb-0.5">#{item.id.slice(0,8)}</div>
+                                  <div className="text-white font-black text-sm">{item.title}</div>
+                               </div>
                              </div>
                           </td>
-                          <td className="py-4 px-4 font-bold text-white max-w-[250px] truncate">
-                             <div className="text-sm font-medium text-slate-400">#ORD-{Date.now().toString().slice(-4) + idx}</div>
-                             <div className="text-white mt-1">{item.title}</div>
+                          <td className="py-6 px-4">
+                             <div className="flex flex-col gap-1">
+                                <div className="flex items-center gap-2 text-white font-bold text-sm">
+                                   <User className="w-3.5 h-3.5 text-slate-500" /> {item.user?.name || "Naməlum"}
+                                </div>
+                                <div className="flex items-center gap-2 text-slate-400 text-xs">
+                                   <Mail className="w-3.5 h-3.5 text-slate-500" /> {item.user?.email || "-"}
+                                </div>
+                             </div>
                           </td>
-                          <td className="py-4 px-4">
-                             <span className={`px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest ${item.type === "Satınalma" || item.type === "Purchase" ? "bg-emerald-500/20 text-emerald-400" : "bg-[#006B8A]/20 text-[#00A3CC]"}`}>
-                                {item.type === "Satınalma" || item.type === "Purchase" ? t.prof_order_type_sale : t.prof_order_type_rent}
+                          <td className="py-6 px-4">
+                             <span className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 w-fit ${item.type === "Satınalma" ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-[#006B8A]/10 text-[#00A3CC] border border-[#006B8A]/20"}`}>
+                                <Tag className="w-3.5 h-3.5" />
+                                {item.type === "Satınalma" ? "SATIŞ" : "İCARƏ"}
                              </span>
                           </td>
-                          <td className="py-4 px-4 font-black text-emerald-400">${(item.totalPrice || item.priceRaw || 0).toLocaleString()}</td>
-                          <td className="py-4 px-4 text-slate-400 text-sm font-medium">
-                             {item.type === "İcarə" || item.type === "Rental" ? `${item.start} — ${item.end} (${item.totalDays} ${t.word_day})` : t.admin_orders_type_sale}
+                          <td className="py-6 px-4">
+                             <div className="text-white font-black text-lg">${(item.totalPrice || 0).toLocaleString()}</div>
                           </td>
-                          <td className="py-4 px-4">
-                             <div className="flex items-center gap-2 text-emerald-500 text-sm font-bold uppercase tracking-widest">
-                               <CheckCircle2 className="w-4 h-4" /> {t.admin_orders_status_all_ok}
+                          <td className="py-6 px-4">
+                             <div className="flex flex-col gap-1">
+                                {item.type === "İcarə" ? (
+                                   <>
+                                      <div className="flex items-center gap-2 text-white text-xs font-bold">
+                                         <Calendar className="w-3.5 h-3.5 text-[#00A3CC]" /> 
+                                         {new Date(item.startDate).toLocaleDateString()} - {new Date(item.endDate).toLocaleDateString()}
+                                      </div>
+                                   </>
+                                ) : (
+                                   <div className="text-slate-500 text-xs font-bold uppercase tracking-widest">Daimi Mülkiyyət</div>
+                                )}
+                                <div className="text-[10px] text-slate-600 font-black uppercase tracking-widest">
+                                   Qeydiyyat: {new Date(item.createdAt).toLocaleDateString()}
+                                </div>
+                             </div>
+                          </td>
+                          <td className="py-6 px-4">
+                             <div className="flex items-center gap-2 text-emerald-500 text-[10px] font-black uppercase tracking-widest">
+                               <CheckCircle2 className="w-4 h-4" /> TAMAMLANDI
                              </div>
                           </td>
                        </tr>
@@ -97,7 +129,7 @@ export default function AdminOrdersPage() {
                  </tbody>
               </table>
               {filtered.length === 0 && (
-                 <div className="text-center py-20 text-slate-500 font-bold">{t.admin_orders_no_found}</div>
+                 <div className="text-center py-24 text-slate-500 font-black uppercase tracking-widest border-t border-white/5">Heç bir sifariş tapılmadı</div>
               )}
             </div>
          </div>

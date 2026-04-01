@@ -120,7 +120,7 @@ export default function AdminDashboardPage() {
                                    {order.type === 'Satınalma' || order.type === 'Purchase' ? t.prof_order_type_sale : t.prof_order_type_rent}
                                 </span>
                              </td>
-                             <td className="py-4 font-black text-white text-sm">${order.price.toLocaleString()}</td>
+                             <td className="py-4 font-black text-white text-sm">${(order.totalPrice || 0).toLocaleString()}</td>
                              <td className="py-4">
                                 <div className="flex items-center gap-1.5 text-emerald-500 text-[10px] font-bold uppercase tracking-widest font-mono">
                                    <CheckCircle2 className="w-3.5 h-3.5" />

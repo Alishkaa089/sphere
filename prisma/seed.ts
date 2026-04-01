@@ -7,8 +7,6 @@ const adapter = new PrismaLibSql({
 })
 const prisma = new PrismaClient({ adapter })
 
-// ── Mock Logic ──
-
 const UNIQUE_COUNTRIES = ["BƏƏ", "Türkiyə", "Qətər", "Azərbaycan"];
 const COUNTRY_CITIES: Record<string, string[]> = {
   "BƏƏ": ["Dubay", "Abu Dabi"],

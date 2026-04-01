@@ -21,6 +21,7 @@ model Property {
   img       String
   userId    String? 
   user      User?    @relation(fields: [userId], references: [id])
+  isSold    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -40,15 +41,19 @@ model Vehicle {
   img       String
   userId    String?
   user      User?    @relation(fields: [userId], references: [id])
+  isSold    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Order {
   id          String   @id @default(uuid())
+  productId   String?
   title       String
   type        String   // "Satınalma", "İcarə"
   totalPrice  Int
+  startDate   DateTime?
+  endDate     DateTime?
   userId      String
   user        User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())

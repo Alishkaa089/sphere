@@ -6,6 +6,7 @@ import bcrypt from 'bcryptjs'
 export async function getProperties() {
   try {
     const properties = await prisma.property.findMany({
+      where: { isSold: false },
       orderBy: {
         createdAt: 'desc'
       }
@@ -38,6 +39,7 @@ export async function getUserProperties(email: string) {
 export async function getVehicles() {
   try {
     const vehicles = await prisma.vehicle.findMany({
+      where: { isSold: false },
       orderBy: {
         createdAt: 'desc'
       }
@@ -419,17 +421,49 @@ export async function createOrder(data: any, userEmail: string) {
 
     const order = await orderModel.create({
       data: {
+        productId: data.productId,
         title: data.title,
         type: data.type,
         totalPrice: parseInt(data.totalPrice),
+        startDate: data.startDate ? new Date(data.startDate) : null,
+        endDate: data.endDate ? new Date(data.endDate) : null,
         userId: user.id
       }
     });
+
+    // If it's a SALE, mark the product as SOLD
+    if (data.type === "Satınalma" && data.productId) {
+      const isProp = await p.property.findUnique({ where: { id: data.productId } });
+      if (isProp) {
+        await p.property.update({ where: { id: data.productId }, data: { isSold: true } });
+      } else {
+        const isVeh = await p.vehicle.findUnique({ where: { id: data.productId } });
+        if (isVeh) {
+          await p.vehicle.update({ where: { id: data.productId }, data: { isSold: true } });
+        }
+      }
+    }
 
     return { success: true, order };
   } catch (error) {
     console.error('Create order error:', error);
     return { error: 'Sifariş yaradılarkən xəta baş verdi.' };
+  }
+}
+
+export async function getReservedDates(productId: string) {
+  try {
+    const orders = await (prisma as any).order.findMany({
+      where: {
+        productId,
+        type: "İcarə",
+        endDate: { gte: new Date() }
+      },
+      select: { startDate: true, endDate: true }
+    });
+    return { success: true, reservedDates: orders };
+  } catch (error) {
+    return { success: false, reservedDates: [] };
   }
 }
 
@@ -941,3 +975,19 @@ export async function updateJobApplicationStatus(id: string, action: "ACCEPTED" 
     return { success: false, error: 'Xəta baş verdi.' };
   }
 }
+
+export async function getOrdersByUserEmail(email: string) {
+  try {
+    const orders = await (prisma as any).order.findMany({
+      where: {
+        user: { email }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+    return { success: true, orders };
+  } catch (error) {
+    console.error('Fetch user orders error:', error);
+    return { success: false, orders: [] };
+  }
+}
+

@@ -7,7 +7,7 @@ import { Camera, Lock, Mail, ShieldCheck, Clock, CalendarRange, Car, LogOut, Che
 import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/context/LanguageContext";
-import { getAllUsers, requestSellerStatus } from "@/lib/actions";
+import { getAllUsers, requestSellerStatus, getOrdersByUserEmail } from "@/lib/actions";
 
 export default function ProfilePage() {
   const { t } = useLanguage();
@@ -37,7 +37,7 @@ export default function ProfilePage() {
       return;
     }
 
-    // Load Orders
+    // Load Orders from legacy storage initially if any
     const storedOrders = localStorage.getItem("myOrders");
     if (storedOrders) {
       setUserOrders(JSON.parse(storedOrders).reverse());
@@ -77,6 +77,13 @@ export default function ProfilePage() {
                  localStorage.setItem("userPlan", me.plan);
                }
             }
+         }
+      });
+
+      // Load real orders from DB
+      getOrdersByUserEmail(storedEmail).then(res => {
+         if (res.success && res.orders) {
+            setUserOrders(res.orders);
          }
       });
     }
@@ -395,7 +402,7 @@ export default function ProfilePage() {
                             <h4 className="text-lg font-black text-white mt-1 leading-tight">{order.title}</h4>
                           </div>
                           <div className="text-right">
-                            <div className="text-xl font-black text-white">${order.price.toLocaleString()}</div>
+                            <div className="text-xl font-black text-white">${(order.totalPrice || 0).toLocaleString()}</div>
                           </div>
                         </div>
 
@@ -403,7 +410,7 @@ export default function ProfilePage() {
                           {(order.type === "İcarə" || order.type === "Rental") && (
                             <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-lg">
                               <CalendarRange className="w-3.5 h-3.5 text-slate-500" />
-                              {order.start} — {order.end} ({order.totalDays} {t.word_day})
+                              {order.startDate ? new Date(order.startDate).toLocaleDateString() : (order.start || "-")} — {order.endDate ? new Date(order.endDate).toLocaleDateString() : (order.end || "-")}
                             </div>
                           )}
                           <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-lg">
