@@ -9,15 +9,18 @@ export default function Footer() {
     <footer className="border-t border-white/5 bg-[#0a0a09] relative z-10 w-full overflow-hidden">
       
       {/* Subtle Background Ambience */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-blue-600/5 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#004E64]/5 blur-[150px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 py-16 md:py-24 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-16">
           
           <div className="col-span-1 md:col-span-1 flex flex-col items-start">
-            <Link href="/" className="inline-block hover:opacity-80 transition-opacity">
+            <Link href="/" className="inline-flex items-center gap-3 hover:opacity-80 transition-opacity">
+              <div className="w-9 h-9 rounded-xl overflow-hidden shadow-lg shadow-[#004E64]/30 flex-shrink-0">
+                <img src="/valorum-logo.png" alt="Valorum Logo" className="w-full h-full object-cover" />
+              </div>
               <span className="text-3xl font-black tracking-tighter text-white drop-shadow-md">
-                Sphere<span className="text-blue-500">.</span>
+                Valorum<span className="text-[#006B8A]">.</span>
               </span>
             </Link>
             <p className="mt-6 text-sm text-slate-400 leading-relaxed font-medium">
@@ -37,9 +40,9 @@ export default function Footer() {
           <div>
             <h3 className="text-sm font-black text-white tracking-widest uppercase mb-6 drop-shadow-md">{t.footer_corp}</h3>
             <ul className="space-y-4">
-              <li><Link href="#" className="text-sm text-slate-400 hover:text-white font-bold transition-colors">{t.footer_about}</Link></li>
-              <li><Link href="#" className="text-sm text-slate-400 hover:text-white font-bold transition-colors">{t.footer_careers}</Link></li>
-              <li><Link href="#" className="text-sm text-slate-400 hover:text-white font-bold transition-colors">{t.footer_b2b}</Link></li>
+              <li><Link href="/about" className="text-sm text-slate-400 hover:text-white font-bold transition-colors">{t.footer_about}</Link></li>
+              <li><Link href="/careers" className="text-sm text-slate-400 hover:text-white font-bold transition-colors">{t.footer_careers}</Link></li>
+              <li><Link href="/partnership" className="text-sm text-slate-400 hover:text-white font-bold transition-colors">{t.footer_b2b}</Link></li>
             </ul>
           </div>
 
@@ -50,11 +53,11 @@ export default function Footer() {
               <input 
                 type="email" 
                 placeholder={t.footer_email_ph}
-                className="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm w-full outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all font-medium text-white placeholder:text-slate-600"
+                className="bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-sm w-full outline-none focus:ring-2 focus:ring-[#006B8A] focus:border-[#006B8A] transition-all font-medium text-white placeholder:text-slate-600"
               />
               <button 
                 type="submit" 
-                className="bg-blue-600 hover:bg-blue-500 text-white rounded-xl px-4 flex items-center justify-center transition-colors shadow-lg shadow-blue-500/20"
+                className="bg-[#004E64] hover:bg-[#006B8A] text-white rounded-xl px-4 flex items-center justify-center transition-colors shadow-lg shadow-[#006B8A]/20"
               >
                 <MoveRight size={20} />
               </button>

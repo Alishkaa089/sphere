@@ -1,9 +1,36 @@
 @import "tailwindcss";
+
+/* ─── Nim Serif Typeface ─── */
+@font-face {
+  font-family: 'NimSerif';
+  src: url('/fonts/NIM.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── Grailga Serif Typeface ─── */
+@font-face {
+  font-family: 'Grailga';
+  src: url('/fonts/grailga-regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 @custom-variant dark (&:is(.dark *));
 /* ─── Design Tokens ─── */
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
+
+  /* ─── Brand Color Palette (#004E64 Deep Teal) ─── */
+  --brand-darkest:  #002B38;  /* indigo-900 equiv */
+  --brand-dark:     #003A4A;  /* blue-700  equiv */
+  --brand:          #004E64;  /* PRIMARY        */
+  --brand-mid:      #006B8A;  /* blue-500  equiv */
+  --brand-light:    #00A3CC;  /* blue-400  equiv */
+  --brand-lighter:  #7FD4E8;  /* blue-300  equiv */
+  --brand-pale:     #CCF0FA;  /* blue-200  equiv */
 }
 
 @theme inline {

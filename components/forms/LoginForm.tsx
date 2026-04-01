@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { motion, AnimatePresence } from "framer-motion";
+import { loginUser } from "@/lib/actions";
 
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -16,18 +17,29 @@ export default function LoginForm() {
     setIsLoading(true);
     setError("");
 
-    // Simulate auth request delay
-    setTimeout(() => {
+    const res = await loginUser({ email, password });
+    
+    if (res.error) {
+      setError(res.error);
       setIsLoading(false);
+      return;
+    }
+    
+    if (res.success && res.user) {
+      localStorage.setItem("userEmail", res.user.email);
+      localStorage.setItem("userName", res.user.name || "");
+      localStorage.setItem("userRole", res.user.role);
+      localStorage.setItem("userAvatar", res.user.avatar || "");
+      localStorage.setItem("userLoggedIn", "true");
+      window.dispatchEvent(new Event("avatarChanged"));
+      window.dispatchEvent(new Event("roleChanged"));
       
-      // Admin check
-      if (email === "adminyekdi@gmail.com" && password === "AdminYekdi") {
-        localStorage.setItem("userLoggedIn", "true");
+      if (res.user.role === "admin") {
         window.location.href = "/dashboard";
       } else {
-        setError("Invalid email or password. Please try again.");
+        window.location.href = "/";
       }
-    }, 1500);
+    }
   }
 
   return (
@@ -57,14 +69,14 @@ export default function LoginForm() {
             disabled={isLoading}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="bg-white/60 focus-visible:ring-blue-500"
+            className="bg-white/60 focus-visible:ring-[#006B8A]"
           />
         </div>
         
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <label className="text-sm font-medium leading-none text-slate-700">Password</label>
-            <a href="#" className="text-xs font-medium text-blue-600 hover:text-blue-700 hover:underline">Forgot password?</a>
+            <a href="#" className="text-xs font-medium text-[#004E64] hover:text-blue-700 hover:underline">Forgot password?</a>
           </div>
           <Input 
             id="password" 
@@ -74,7 +86,7 @@ export default function LoginForm() {
             disabled={isLoading}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="bg-white/60 focus-visible:ring-blue-500"
+            className="bg-white/60 focus-visible:ring-[#006B8A]"
           />
         </div>
 

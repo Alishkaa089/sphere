@@ -46,7 +46,7 @@ export default function BookingWidget({
   return (
     <div className="bg-[#0f0f0e]/90 backdrop-blur-3xl border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
         {/* Glow behind widget */}
-        <div className="absolute top-[-50px] right-[-50px] w-[200px] h-[200px] bg-blue-500/10 blur-[80px] rounded-full point-events-none" />
+        <div className="absolute top-[-50px] right-[-50px] w-[200px] h-[200px] bg-[#006B8A]/10 blur-[80px] rounded-full point-events-none" />
         
         <div className="mb-8 border-b border-white/10 pb-6 relative z-10">
             <h3 className="text-slate-400 font-bold uppercase tracking-wider text-xs mb-2">
@@ -64,7 +64,7 @@ export default function BookingWidget({
                       min="1" 
                       value={reservationDays} 
                       onChange={(e) => setReservationDays(parseInt(e.target.value) || 1)}
-                      className="w-16 bg-black border border-white/10 rounded-lg px-2 py-1 text-center font-bold text-white focus:outline-none focus:border-blue-500 relative z-20"
+                      className="w-16 bg-black border border-white/10 rounded-lg px-2 py-1 text-center font-bold text-white focus:outline-none focus:border-[#006B8A] relative z-20"
                     />
                 </div>
             )}
@@ -83,7 +83,7 @@ export default function BookingWidget({
             )}
             <div className="flex justify-between items-center text-lg mt-6 pt-6 border-t border-white/10">
                 <span className="text-white font-black uppercase tracking-widest">{t.widget_total}</span>
-                <span className="text-blue-400 font-black">${theFinalAmount.toLocaleString()}</span>
+                <span className="text-[#00A3CC] font-black">${theFinalAmount.toLocaleString()}</span>
             </div>
         </div>
 
@@ -96,7 +96,7 @@ export default function BookingWidget({
 
         <button 
            onClick={handleBooking}
-           className="relative z-10 w-full py-5 rounded-2xl font-black text-lg transition-transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 shadow-xl shadow-blue-500/20 text-white"
+           className="relative z-10 w-full py-5 rounded-2xl font-black text-lg transition-transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2 bg-gradient-to-r from-[#004E64] to-[#00394A] shadow-xl shadow-[#006B8A]/20 text-white"
         >
             <Wallet className="w-5 h-5" /> 
             {isSale ? t.btn_buy : t.btn_rent_now}

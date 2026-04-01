@@ -6,14 +6,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { Search, MapPin, Gauge, ShieldPlus, Battery, Star, Car, Globe, ChevronDown, Map, ArrowRight } from "lucide-react";
 import { UNIQUE_COUNTRIES, COUNTRY_CITIES } from "@/constants/countries";
-import { generateVehicles } from "@/utils/mockData";
+import { getVehicles } from "@/lib/actions";
 import Footer from "@/components/common/Footer";
 import { useLanguage } from "@/context/LanguageContext";
 
 const CATEGORIES = ["Bütün Transportlar", "İdman Avtomobilləri", "Premium Yolsuzluq (SUV)", "Eksklüziv", "Elektrik"];
 
 export default function TransportPage() {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
+  
+  const CATEGORIES = [
+    { label: t.cat_all, val: "Bütün Transportlar" },
+    { label: t.cat_sports, val: "İdman Avtomobilləri" },
+    { label: t.cat_suv, val: "Premium Yolsuzluq (SUV)" },
+    { label: t.cat_exclusive, val: "Eksklüziv" },
+    { label: t.cat_electric, val: "Elektrik" }
+  ];
+
   const [selectedCountry, setSelectedCountry] = useState("Bütün Ölkələr");
   const [selectedCity, setSelectedCity] = useState("Bütün Şəhərlər");
   const [selectedCategory, setSelectedCategory] = useState("Bütün Transportlar");
@@ -26,8 +35,36 @@ export default function TransportPage() {
   const [ALL_VEHICLES, setAllVehicles] = useState<any[]>([]);
 
   useEffect(() => {
-    setAllVehicles(generateVehicles());
+    const fetchVehicles = async () => {
+      const dbVehicles = await getVehicles();
+      setAllVehicles(dbVehicles);
+    };
+    fetchVehicles();
   }, []);
+
+  const getCountryLabel = (c: string) => {
+    if (c === "Bütün Ölkələr") return t.all_countries;
+    const countryMap: Record<string, string> = {
+      "BƏƏ": t.country_UAE,
+      "Türkiyə": t.country_Turkey,
+      "Qətər": t.country_Qatar,
+      "Azərbaycan": t.country_Azerbaijan,
+      "ABŞ": t.country_USA,
+      "Almaniya": t.country_Germany,
+      "Böyük Britaniya": t.country_UK,
+      "Fransa": t.country_France,
+      "İtaliya": t.country_Italy,
+      "İspaniya": t.country_Spain,
+      "İsveçrə": t.country_Switzerland,
+      "Monako": t.country_Monaco,
+    };
+    return countryMap[c] || c;
+  };
+
+  const getCityLabel = (city: string) => {
+    if (city === "Bütün Şəhərlər") return t.all_cities;
+    return city;
+  };
 
   const availableCities = selectedCountry !== "Bütün Ölkələr" && COUNTRY_CITIES[selectedCountry] 
      ? COUNTRY_CITIES[selectedCountry] 
@@ -43,9 +80,9 @@ export default function TransportPage() {
 
   const filteredVehicles = ALL_VEHICLES.filter(v => {
     const matchesQuery = (v.title || "").toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         (v.loc || "").toLowerCase().includes(searchQuery.toLowerCase());
+                         (v.city || "").toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCountry = selectedCountry === "Bütün Ölkələr" || v.country === selectedCountry;
-    const matchesCity = selectedCity === "Bütün Şəhərlər" || v.loc === selectedCity;
+    const matchesCity = selectedCity === "Bütün Şəhərlər" || v.city === selectedCity;
     const matchesCat = selectedCategory === "Bütün Transportlar" || v.category === selectedCategory;
     const matchesTrade = tradeType === "Bütün" 
         ? true 
@@ -55,8 +92,6 @@ export default function TransportPage() {
 
     return matchesQuery && matchesCountry && matchesCity && matchesCat && matchesTrade;
   });
-
-
 
   return (
     <div className="min-h-screen bg-[#0a0a09] flex flex-col relative overflow-hidden">
@@ -84,7 +119,7 @@ export default function TransportPage() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-6 inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest bg-white/10 backdrop-blur-md border border-white/20 text-white shadow-xl"
           >
-            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#00A3CC] animate-pulse" />
             {t.cat_trans_badge || "Elite Fleet"}
           </motion.div>
           
@@ -92,6 +127,7 @@ export default function TransportPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-5xl md:text-7xl font-black text-white drop-shadow-2xl leading-[1.1] mb-6"
+            style={{ fontFamily: "'Grailga', serif" }}
           >
             Unleash <br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300">{t.cat_trans_title || "High-Speed Collection."}</span>
@@ -103,7 +139,7 @@ export default function TransportPage() {
             transition={{ delay: 0.1 }}
             className="text-lg md:text-xl text-white/80 drop-shadow-md font-medium leading-relaxed max-w-2xl"
           >
-            {t.cat_trans_desc || "Detallıca yoxlanılmış lüks nəqliyyat ilə adrenalini sərbəst buraxın."}
+             {t.cat_trans_desc}
           </motion.p>
         </div>
 
@@ -115,7 +151,7 @@ export default function TransportPage() {
           className="relative z-30 -mt-8 mb-8"
         >
           <div className="bg-zinc-900/80 backdrop-blur-xl border border-white/10 shadow-2xl rounded-[2rem] p-2 md:p-4 flex flex-col md:flex-row gap-3 items-center justify-between">
-            <div className="flex w-full md:w-auto items-center flex-1 px-4 h-12 md:h-14 bg-black/50 rounded-2xl border border-white/5 focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-all">
+            <div className="flex w-full md:w-auto items-center flex-1 px-4 h-12 md:h-14 bg-black/50 rounded-2xl border border-white/5 focus-within:border-[#006B8A] focus-within:ring-1 focus-within:ring-[#006B8A] transition-all">
               <Search className="w-5 h-5 text-slate-400" />
               <input 
                 type="text" 
@@ -133,8 +169,8 @@ export default function TransportPage() {
                 className="flex items-center justify-between w-full h-12 md:h-14 px-5 rounded-2xl bg-black/50 border border-white/5 text-white font-bold hover:bg-black/70 transition"
               >
                 <div className="flex items-center gap-2 truncate">
-                  <Globe className="w-4 h-4 text-indigo-400 flex-shrink-0" />
-                  <span className="truncate text-sm">{selectedCountry === "Bütün Ölkələr" ? (t.nav_countries || "Bütün Ölkələr") : selectedCountry}</span>
+                  <Globe className="w-4 h-4 text-[#00A3CC] flex-shrink-0" />
+                  <span className="truncate text-sm">{getCountryLabel(selectedCountry)}</span>
                 </div>
                 <ChevronDown className={`w-4 h-4 transition-transform ${isCountryDropdownOpen ? "rotate-180" : ""}`} />
               </button>
@@ -152,14 +188,14 @@ export default function TransportPage() {
                       onClick={() => handleCountrySelect("Bütün Ölkələr")}
                       className="w-full text-left px-5 py-3 text-sm font-bold text-white hover:bg-white/10 transition-colors"
                     >
-                      {t.nav_countries || "Bütün Ölkələr"}
+                      {t.all_countries}
                     </button>
                     {UNIQUE_COUNTRIES.map(ctry => (
                       <button 
                         key={ctry} onClick={() => handleCountrySelect(ctry)}
                         className="w-full text-left px-5 py-3 text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
                       >
-                        {ctry}
+                        {getCountryLabel(ctry)}
                       </button>
                     ))}
                   </motion.div>
@@ -175,7 +211,7 @@ export default function TransportPage() {
               >
                 <div className="flex items-center gap-2 truncate">
                   <Map className={`w-4 h-4 flex-shrink-0 ${selectedCountry === "Bütün Ölkələr" ? "text-slate-600" : "text-purple-400"}`} />
-                  <span className="truncate text-sm">{selectedCountry === "Bütün Ölkələr" ? (t.all_cities || "Ölkə Seçin") : (selectedCity === "Bütün Şəhərlər" ? (t.all_cities || "Bütün Şəhərlər") : selectedCity)}</span>
+                  <span className="truncate text-sm">{selectedCountry === "Bütün Ölkələr" ? t.select_country : getCityLabel(selectedCity)}</span>
                 </div>
                 <ChevronDown className={`w-4 h-4 transition-transform ${isCityDropdownOpen ? "rotate-180" : ""}`} />
               </button>
@@ -191,7 +227,7 @@ export default function TransportPage() {
                       onClick={() => { setSelectedCity("Bütün Şəhərlər"); setIsCityDropdownOpen(false); }}
                       className="w-full text-left px-5 py-3 text-sm font-bold text-white hover:bg-white/10 transition-colors"
                     >
-                      {t.all_cities || "Bütün Şəhərlər"}
+                      {t.all_cities}
                     </button>
                     {availableCities.map(city => (
                       <button 
@@ -218,7 +254,7 @@ export default function TransportPage() {
                       : "text-slate-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
-                  {type === "Bütün" ? (t.all || "All") : type === "Satış" ? (t.for_sale || "Satış") : (t.for_rent || "İcarə")}
+                  {type === "Bütün" ? t.all : type === "Satış" ? t.for_sale : t.for_rent}
                 </button>
              ))}
           </div>
@@ -226,15 +262,15 @@ export default function TransportPage() {
           <div className="flex gap-2 mt-4 flex-wrap pb-2">
             {CATEGORIES.map(cat => (
               <button 
-                key={cat} 
-                onClick={() => setSelectedCategory(cat)}
+                key={cat.val} 
+                onClick={() => setSelectedCategory(cat.val)}
                 className={`px-6 py-2 rounded-full font-bold transition-all text-sm ${
-                  selectedCategory === cat 
-                    ? "bg-indigo-600 border border-indigo-500 text-white shadow-[0_0_15px_rgba(79,70,229,0.5)]" 
-                    : "bg-black/50 border border-white/10 text-slate-400 hover:border-indigo-500 hover:text-indigo-400"
+                  selectedCategory === cat.val
+                    ? "bg-[#004E64] border border-[#006B8A] text-white shadow-[0_0_15px_rgba(79,70,229,0.5)]" 
+                    : "bg-black/50 border border-white/10 text-slate-400 hover:border-[#006B8A] hover:text-[#00A3CC]"
                 }`}
               >
-                {cat === "Bütün Transportlar" ? (t.cat_filter_all || "Bütün") : cat}
+                {cat.label}
               </button>
             ))}
           </div>
@@ -252,7 +288,7 @@ export default function TransportPage() {
                 transition={{ duration: 0.4, delay: i * 0.05 }}
                 className="w-full"
               >
-                <Link href={`/transport/${v.id}`} className="group relative block bg-[#0f0f0e] border border-white/5 rounded-[2rem] overflow-hidden hover:border-indigo-500/50 transition-all shadow-xl hover:shadow-indigo-500/10 h-full flex flex-col w-full">
+                <Link href={`/transport/${v.id}`} className="group relative block bg-[#0f0f0e] border border-white/5 rounded-[2rem] overflow-hidden hover:border-[#006B8A]/50 transition-all shadow-xl hover:shadow-[#006B8A]/10 h-full flex flex-col w-full">
                   
                   <div className="relative h-64 overflow-hidden">
                     <img src={v.img} alt={v.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
@@ -261,17 +297,17 @@ export default function TransportPage() {
                     
                     <div className="absolute top-5 left-5 right-5 flex justify-between items-start z-10">
                        <div className={`backdrop-blur-md border border-white/30 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg ${vSale ? 'bg-emerald-500/80' : 'bg-purple-500/80'}`}>
-                         {vSale ? (t.for_sale || "Satış") : (t.for_rent || "İcarə")}
+                         {vSale ? t.for_sale : t.for_rent}
                        </div>
                        <div className="bg-black/80 backdrop-blur-md border border-white/10 text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-full flex items-center gap-1">
-                          <Globe className="w-3 h-3 text-indigo-400" /> {v.country}
+                          <Globe className="w-3 h-3 text-[#00A3CC]" /> {getCountryLabel(v.country)}
                        </div>
                     </div>
 
                     <div className="absolute bottom-5 left-5 right-5 z-10 text-white">
-                        <div className="flex items-center gap-1.5 text-indigo-300 font-bold text-sm mb-2 drop-shadow-md">
+                        <div className="flex items-center gap-1.5 text-[#7FD4E8] font-bold text-sm mb-2 drop-shadow-md">
                           <MapPin className="w-4 h-4" />
-                          {v.loc}
+                          {v.city}
                         </div>
                         <h3 className="text-2xl font-black drop-shadow-md truncate">{v.title}</h3>
                     </div>
@@ -287,14 +323,14 @@ export default function TransportPage() {
                     <div className="flex items-end justify-between border-t border-white/5 pt-5">
                       <div>
                         <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">
-                          {vSale ? (t.val_trans_price || "Vehicle Value") : (t.val_rent_price || "Daily Rent")}
+                          {vSale ? t.val_trans_price : t.val_rent_price}
                         </p>
                         <div className="flex items-baseline gap-1">
-                          <span className="text-3xl font-black text-white">${v.price}</span>
+                          <span className="text-3xl font-black text-white">${v.price.toLocaleString()}</span>
                           {!vSale && <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">/ {t.word_day || "day"}</span>}
                         </div>
                       </div>
-                      <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-indigo-600 group-hover:border-indigo-500 transition-all shadow-lg transform group-hover:scale-110">
+                      <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white group-hover:bg-[#004E64] group-hover:border-[#006B8A] transition-all shadow-lg transform group-hover:scale-110">
                         <ArrowRight className="w-5 h-5" />
                       </div>
                     </div>
@@ -306,13 +342,13 @@ export default function TransportPage() {
         ) : (
           <div className="py-24 text-center flex flex-col items-center justify-center bg-zinc-900/40 rounded-[2rem] border border-white/5 backdrop-blur-xl">
             <Car className="w-20 h-20 text-slate-600 mb-6 opacity-40" />
-            <h3 className="text-3xl font-black text-white mb-3">{t.no_property_found_title || "Tapılmadı"}</h3>
-            <p className="text-slate-400 max-w-md mx-auto text-lg">{t.no_property_found_description || "Axtarışa uyğun məlumat yoxdur."}</p>
+            <h3 className="text-3xl font-black text-white mb-3">{t.no_property_found_title}</h3>
+            <p className="text-slate-400 max-w-md mx-auto text-lg">{t.no_property_found_description}</p>
             <button 
               onClick={() => { setSelectedCity("Bütün Şəhərlər"); setSearchQuery(""); setTradeType("Bütün"); setSelectedCategory("Bütün Transportlar"); setSelectedCountry("Bütün Ölkələr"); }}
               className="mt-8 px-8 py-3 font-bold uppercase tracking-widest rounded-full bg-white text-black hover:bg-slate-200 transition shadow-xl hover:shadow-white/20"
             >
-              {t.reset_filters || "Sıfırla"}
+              {t.reset_filters}
             </button>
           </div>
         )}

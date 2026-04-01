@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Property {
+  id        String   @id @default(uuid())
+  title     String
+  category  String
+  status    String
+  city      String
+  country   String
+  price     Int
+  beds      Int
+  baths     Int
+  area      Int
+  rating    Float
+  img       String
+  userId    String? 
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Vehicle {
+  id        String   @id @default(uuid())
+  title     String
+  category  String
+  status    String
+  country   String
+  city      String
+  price     Int
+  battery   Int?
+  range     Int?
+  power     String?
+  rating    Float?
+  img       String
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Order {
+  id          String   @id @default(uuid())
+  title       String
+  type        String   // "Satınalma", "İcarə"
+  totalPrice  Int
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  password  String
+  name      String?
+  role      String     @default("user") // "user", "seller", "admin"
+  plan      String     @default("BASIC") // "BASIC", "PRO", "ELITE"
+  planStartDate DateTime?
+  planExpiresAt DateTime?
+  sellerRequestStatus String? // null, "PENDING", "APPROVED", "REJECTED"
+  jobTitle  String?
+  avatar    String?
+  properties Property[]
+  vehicles   Vehicle[]
+  orders     Order[]
+  elitePartnerRequests ElitePartnerRequest[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model ElitePartnerRequest {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  company  String
+  position String
+  phone    String
+  message  String
+  status   String   @default("PENDING") // "PENDING", "APPROVED", "REJECTED"
+  adminNotes String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model JobApplication {
+  id        String   @id @default(uuid())
+  roleTitle String
+  fullName  String
+  email     String
+  phone     String
+  portfolio String?
+  message   String
+  status    String   @default("PENDING") // PENDING, ACCEPTED, REJECTED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

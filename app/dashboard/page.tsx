@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Users, Building, Car, ArrowUpRight, CheckCircle2, DollarSign, Activity, TrendingUp, CalendarCheck } from "lucide-react";
-import { generateProperties, generateVehicles } from "@/utils/mockData";
+import { Users, Building, Car, ArrowUpRight, CheckCircle2, DollarSign, Activity, TrendingUp, CalendarCheck, ShieldCheck, Download, Clock } from "lucide-react";
+import { getAdminStats } from "../../lib/actions";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AdminDashboardPage() {
+   const { t } = useLanguage();
    const [stats, setStats] = useState({
      totalUsers: 0,
      totalRevenue: 0,
@@ -13,39 +15,24 @@ export default function AdminDashboardPage() {
      totalTrans: 0,
      recentOrders: [] as any[]
    });
+   const [loading, setLoading] = useState(true);
 
    useEffect(() => {
-      const loadRealData = () => {
-         // Users: 1 Admin + generic simulated base
-         const baseUsers = 14502;
-
-         // Get real items
-         const props = generateProperties();
-         const trans = generateVehicles();
-
-         // Get real revenue from placed orders in this browser + simulated global
-         const storedOrders = JSON.parse(localStorage.getItem("myOrders") || "[]");
-         
-         const realRevenue = storedOrders.reduce((sum: number, order: any) => sum + (order.totalPrice || order.priceRaw || 0), 0);
-         const simulatedGlobalRev = 4500000; // Simulated existing global sales
-
-         setStats({
-            totalUsers: baseUsers + (storedOrders.length > 0 ? 1 : 0),
-            totalRevenue: simulatedGlobalRev + realRevenue,
-            totalProps: props.length,
-            totalTrans: trans.length,
-            recentOrders: storedOrders.reverse().slice(0, 5) // Last 5 orders
-         });
-      };
-
-      loadRealData();
+     const loadData = async () => {
+       const res = await getAdminStats();
+       if (res.success && res.stats) {
+         setStats(res.stats);
+       }
+       setLoading(false);
+     };
+     loadData();
    }, []);
 
    const statCards = [
-     { label: "Ümumi Dövriyyə", value: `$${stats.totalRevenue.toLocaleString()}`, percent: "+24.5%", icon: <DollarSign className="w-6 h-6 text-emerald-500" /> },
-     { label: "Aktiv İstifadəçilər", value: stats.totalUsers.toLocaleString(), percent: "+12.3%", icon: <Users className="w-6 h-6 text-blue-500" /> },
-     { label: "Bazada Mülklər", value: stats.totalProps.toLocaleString(), percent: "+4.1%", icon: <Building className="w-6 h-6 text-amber-500" /> },
-     { label: "Bazada Avtomobillər", value: stats.totalTrans.toLocaleString(), percent: "+8.9%", icon: <Car className="w-6 h-6 text-rose-500" /> },
+     { label: t.admin_total_revenue, value: `$${stats.totalRevenue.toLocaleString()}`, percent: "+24.5%", icon: <DollarSign className="w-6 h-6 text-emerald-500" /> },
+     { label: t.admin_active_users, value: stats.totalUsers.toLocaleString(), percent: "+12.3%", icon: <Users className="w-6 h-6 text-[#006B8A]" /> },
+     { label: t.admin_db_props, value: stats.totalProps.toLocaleString(), percent: "+4.1%", icon: <Building className="w-6 h-6 text-amber-500" /> },
+     { label: t.admin_db_trans, value: stats.totalTrans.toLocaleString(), percent: "+8.9%", icon: <Car className="w-6 h-6 text-rose-500" /> },
    ];
 
    return (
@@ -53,12 +40,16 @@ export default function AdminDashboardPage() {
          
          <header className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 mb-12">
             <div>
-               <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-2">Ümumi İdarə Paneli</motion.h1>
-               <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-sm sm:text-base text-slate-400 font-medium tracking-wide">SPHERE qlobal satış və icarə statistikası.</motion.p>
+               <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-2">
+                 {t.admin_title}
+               </motion.h1>
+               <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-sm sm:text-base text-slate-400 font-medium tracking-wide">
+                 {t.admin_subtitle}
+               </motion.p>
             </div>
             <div className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-full px-5 py-2">
                <span className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse" />
-               <span className="text-[10px] sm:text-sm font-bold text-white uppercase tracking-widest">Canlı Data</span>
+               <span className="text-[10px] sm:text-sm font-bold text-white uppercase tracking-widest">{t.admin_live_data}</span>
             </div>
          </header>
 
@@ -90,41 +81,51 @@ export default function AdminDashboardPage() {
 
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Orders Table */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="col-span-2 bg-black/30 border border-white/5 rounded-3xl p-8 relative overflow-hidden shadow-2xl flex flex-col h-[500px]">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="col-span-1 lg:col-span-2 bg-black/30 border border-white/5 rounded-3xl p-8 relative overflow-hidden shadow-2xl flex flex-col h-[600px]">
                <div className="flex justify-between items-center mb-8">
                  <h3 className="text-lg font-black text-white uppercase tracking-widest flex items-center gap-3">
-                   <Activity className="w-5 h-5 text-red-500" /> Son Satışlar / Rezervlər
+                   <Activity className="w-5 h-5 text-red-500" /> {t.admin_recent_orders}
                  </h3>
-                 <button className="text-sm font-bold text-slate-400 hover:text-white transition-colors flex items-center gap-1">Hamısına Bax <ArrowUpRight className="w-4 h-4"/></button>
+                 <button className="text-sm font-bold text-slate-400 hover:text-white transition-colors flex items-center gap-1">
+                   {t.admin_view_all} <ArrowUpRight className="w-4 h-4"/>
+                 </button>
                </div>
                
                {stats.recentOrders.length > 0 ? (
                   <div className="overflow-x-auto overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
                     <table className="w-full text-left min-w-[600px]">
                       <thead>
-                        <tr className="border-b border-white/5">
-                          <th className="pb-4 text-[10px] sm:text-xs font-black uppercase text-slate-500">Sifariş №</th>
-                          <th className="pb-4 text-[10px] sm:text-xs font-black uppercase text-slate-500">Məhsul</th>
-                          <th className="pb-4 text-[10px] sm:text-xs font-black uppercase text-slate-500">Tip</th>
-                          <th className="pb-4 text-[10px] sm:text-xs font-black uppercase text-slate-500">Məbləğ</th>
-                          <th className="pb-4 text-[10px] sm:text-xs font-black uppercase text-slate-500">Status</th>
+                        <tr className="text-xs font-bold text-slate-500 uppercase tracking-widest border-b border-white/5">
+                           <th className="pb-4">{t.admin_order_no}</th>
+                           <th className="pb-4">{t.admin_product}</th>
+                           <th className="pb-4">{t.admin_type}</th>
+                           <th className="pb-4">{t.admin_amount}</th>
+                           <th className="pb-4">{t.admin_status}</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        {stats.recentOrders.map((order: any, idx: number) => (
-                           <tr key={idx} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                             <td className="py-4 text-sm font-medium text-slate-400">#ORD-{Date.now().toString().slice(-6) + idx}</td>
-                             <td className="py-4 text-sm font-bold text-white max-w-[200px] truncate">{order.title}</td>
+                      <tbody className="divide-y divide-white/5">
+                        {stats.recentOrders.map((order, idx) => (
+                           <tr key={idx} className="group hover:bg-white/5 transition-colors">
+                             <td className="py-4 text-sm font-bold text-slate-400">#{(order.id || idx + 1001).toString().slice(-4)}</td>
                              <td className="py-4">
-                               <span className={`px-2 py-1 rounded text-[10px] font-black uppercase ${order.type === "Satınalma" ? "bg-emerald-500/20 text-emerald-400" : "bg-blue-500/20 text-blue-400"}`}>
-                                 {order.type}
-                               </span>
+                                <div className="flex items-center gap-3">
+                                   <div className="w-8 h-8 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                                      {order.img && <img src={order.img} alt={order.title} className="w-full h-full object-cover" />}
+                                   </div>
+                                   <span className="text-sm font-black text-white truncate max-w-[150px]">{order.title}</span>
+                                </div>
                              </td>
-                             <td className="py-4 text-sm font-black text-white">${(order.totalPrice || order.priceRaw).toLocaleString()}</td>
                              <td className="py-4">
-                               <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-500">
-                                 <CheckCircle2 className="w-4 h-4" /> Ödənilib
-                               </div>
+                                <span className={`px-2 py-1 rounded-md text-[10px] font-black uppercase tracking-widest ${order.type === 'Satınalma' || order.type === 'Purchase' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-purple-500/10 text-purple-400 border border-purple-500/20'}`}>
+                                   {order.type === 'Satınalma' || order.type === 'Purchase' ? t.prof_order_type_sale : t.prof_order_type_rent}
+                                </span>
+                             </td>
+                             <td className="py-4 font-black text-white text-sm">${order.price.toLocaleString()}</td>
+                             <td className="py-4">
+                                <div className="flex items-center gap-1.5 text-emerald-500 text-[10px] font-bold uppercase tracking-widest font-mono">
+                                   <CheckCircle2 className="w-3.5 h-3.5" />
+                                   {t.admin_paid}
+                                </div>
                              </td>
                            </tr>
                         ))}
@@ -132,42 +133,50 @@ export default function AdminDashboardPage() {
                     </table>
                   </div>
                ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center text-center opacity-60">
-                     <CalendarCheck className="w-12 h-12 text-slate-600 mb-3" />
-                     <p className="text-slate-400 font-bold">Hələlik heç bir real sifariş (rezerv) qeydə alınmayıb.</p>
-                     <p className="text-xs text-slate-500 mt-1">Siz saytın özündə bir məhsul aldıqda, o burada görünəcək.</p>
+                  <div className="flex-1 flex flex-col items-center justify-center text-center py-20 opacity-30">
+                    <Clock className="w-12 h-12 mb-4" />
+                    <p className="text-sm font-bold uppercase tracking-widest">{t.admin_no_orders}</p>
+                    <p className="text-xs mt-1 lowercase">{t.admin_no_orders_desc}</p>
                   </div>
                )}
             </motion.div>
 
-            {/* Quick Actions / System Health */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="bg-red-500/10 border border-red-500/20 rounded-3xl p-8 relative overflow-hidden shadow-2xl flex flex-col justify-between">
+            {/* System Health */}
+            <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="bg-zinc-900 border border-white/5 rounded-3xl p-8 shadow-2xl flex flex-col justify-between h-[600px]">
                <div>
-                  <h3 className="text-xl font-black text-white mb-2">Sistem Vəziyyəti</h3>
-                  <p className="text-red-200/60 font-medium mb-6">Bütün xidmətlər operativ fəaliyyətdədir. Server işlək vəziyyətdədir.</p>
-               </div>
-               
-               <div className="space-y-4">
-                  <div className="bg-black/40 p-4 rounded-2xl flex items-center justify-between border border-white/5 relative overflow-hidden group">
-                     <div className="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                     <span className="font-bold text-slate-300 relative z-10">Mərkəzi Server</span>
-                     <span className="text-xs font-black uppercase text-emerald-400 bg-emerald-500/20 px-2.5 py-1 rounded-md relative z-10">Online</span>
-                  </div>
-                  <div className="bg-black/40 p-4 rounded-2xl flex items-center justify-between border border-white/5 relative overflow-hidden group">
-                     <div className="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                     <span className="font-bold text-slate-300 relative z-10">Ödəniş Keçidi (Stripe)</span>
-                     <span className="text-xs font-black uppercase text-emerald-400 bg-emerald-500/20 px-2.5 py-1 rounded-md relative z-10">Online</span>
-                  </div>
-                  <div className="bg-black/40 p-4 rounded-2xl flex items-center justify-between border border-white/5 relative overflow-hidden group">
-                     <div className="absolute inset-0 bg-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                     <span className="font-bold text-slate-300 relative z-10">Məlumat Bazası</span>
-                     <span className="text-xs font-black uppercase text-amber-400 bg-amber-500/20 px-2.5 py-1 rounded-md relative z-10">Syncing</span>
+                  <h3 className="text-xl font-black text-white mb-8 pb-4 border-b border-white/5">{t.admin_sys_status}</h3>
+                  
+                  <div className="space-y-6">
+                    <div className="bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-2xl flex items-center gap-4">
+                       <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                          <ShieldCheck className="w-5 h-5" />
+                       </div>
+                       <div>
+                          <h4 className="text-sm font-black text-emerald-400">{t.admin_sys_status}</h4>
+                          <p className="text-[10px] text-emerald-500/70 font-medium">{t.admin_sys_desc}</p>
+                       </div>
+                    </div>
+
+                    <div className="space-y-4 pt-4">
+                       <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-slate-500">
+                          <span>{t.admin_central_server}</span>
+                          <span className="text-emerald-500 font-mono">24ms</span>
+                       </div>
+                       <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-slate-500">
+                          <span>{t.admin_payment_gateway}</span>
+                          <span className="text-emerald-500 font-mono">Online</span>
+                       </div>
+                       <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-slate-500">
+                          <span>{t.admin_db}</span>
+                          <span className="text-emerald-500 font-mono">Active</span>
+                       </div>
+                    </div>
                   </div>
                </div>
 
-               <div className="mt-8 pt-6 border-t border-red-500/20">
-                  <button className="w-full py-4 rounded-xl bg-red-600 hover:bg-red-500 text-white font-black uppercase tracking-widest text-sm transition-all shadow-xl shadow-red-600/20 flex justify-center items-center gap-2">
-                     Bütün Hesabatları Çıxar <ArrowUpRight className="w-4 h-4" />
+               <div className="mt-8">
+                  <button className="w-full py-4 bg-white/5 hover:bg-white/10 text-white font-black text-xs uppercase tracking-[0.2em] rounded-2xl border border-white/5 transition-all shadow-xl flex justify-center items-center gap-3">
+                     <Download className="w-4 h-4" /> {t.admin_export_reports}
                   </button>
                </div>
             </motion.div>

@@ -3,14 +3,22 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Footer from "@/components/common/Footer";
-import { Camera, Lock, Mail, ShieldCheck, Clock, CalendarRange, Car, LogOut, CheckCircle2, AlertCircle, Eye, EyeOff } from "lucide-react";
+import { Camera, Lock, Mail, ShieldCheck, Clock, CalendarRange, Car, LogOut, CheckCircle2, AlertCircle, Eye, EyeOff, Users } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useLanguage } from "@/context/LanguageContext";
+import { getAllUsers, requestSellerStatus } from "@/lib/actions";
 
 export default function ProfilePage() {
+  const { t } = useLanguage();
   const [userOrders, setUserOrders] = useState<any[]>([]);
-  const [avatarUrl, setAvatarUrl] = useState("https://ui-avatars.com/api/?name=Istifadeci&background=0D8ABC&color=fff");
-  const [userEmail, setUserEmail] = useState("istifadeci@sphere.com");
+  const [avatarUrl, setAvatarUrl] = useState("https://ui-avatars.com/api/?name=User&background=004E64&color=fff");
+  const [userEmail, setUserEmail] = useState("user@Valorum.com");
   const [isSeller, setIsSeller] = useState(false);
+  const [sellerStatus, setSellerStatus] = useState<string | null>(null);
+  const [jobTitle, setJobTitle] = useState<string | null>(null);
+  const [requestLoading, setRequestLoading] = useState(false);
+  const [userPlan, setUserPlan] = useState("BASIC");
 
   // Passwords
   const [oldPass, setOldPass] = useState("");
@@ -23,9 +31,9 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    // If not logged in, immediately redirect to register
+    // If not logged in, immediately redirect to login/register
     if (localStorage.getItem("userLoggedIn") !== "true") {
-      window.location.href = "/register";
+      window.location.href = "/login";
       return;
     }
 
@@ -43,9 +51,52 @@ export default function ProfilePage() {
     const storedEmail = localStorage.getItem("userEmail");
     if (storedEmail) setUserEmail(storedEmail);
 
-    const storedRole = localStorage.getItem("userRole");
-    setIsSeller(storedRole === "seller");
+    const role = localStorage.getItem("userRole");
+    setIsSeller(role === "seller");
+
+    const plan = localStorage.getItem("userPlan");
+    if (plan) setUserPlan(plan);
+
+    const onPlanChange = () => {
+      setUserPlan(localStorage.getItem("userPlan") || "BASIC");
+    };
+    window.addEventListener("planChanged", onPlanChange);
+
+    if (storedEmail) {
+      // Find user to get real status from DB
+      getAllUsers().then(res => {
+         if (res.success && res.users) {
+            const me = res.users.find((u: any) => u.email === storedEmail);
+            if (me) {
+               setSellerStatus(me.sellerRequestStatus);
+               if (me.jobTitle) setJobTitle(me.jobTitle);
+               if (me.role === "seller") setIsSeller(true);
+               
+               if (me.plan) {
+                 setUserPlan(me.plan);
+                 localStorage.setItem("userPlan", me.plan);
+               }
+            }
+         }
+      });
+    }
+
+    return () => window.removeEventListener("planChanged", onPlanChange);
   }, []);
+
+  const handleSellerRequest = async () => {
+    const email = localStorage.getItem("userEmail");
+    if (!email) return;
+    setRequestLoading(true);
+    const res = await requestSellerStatus(email);
+    setRequestLoading(false);
+    if (res.success) {
+      setSellerStatus("PENDING");
+      alert("Müraciətiniz göndərildi. Admin tərəfindən təsdiqlənməsini gözləyin.");
+    } else {
+      alert(res.error || "Xəta baş verdi.");
+    }
+  };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -67,32 +118,34 @@ export default function ProfilePage() {
     setPassSuccess("");
 
     if (!oldPass || !newPass) {
-      setPassError("Bütün xanaları doldurun.");
+      setPassError(t.prof_fill_all);
       return;
     }
 
-    // Auth Mock Logic natively stored 
     const currentPass = localStorage.getItem("userPassword") || "password123";
     
     if (oldPass !== currentPass) {
-      setPassError("Köhnə parol yanlışdır!");
+      setPassError(t.prof_pass_wrong);
       return;
     }
 
     if (newPass === oldPass) {
-      setPassError("Yeni parol əvvəlki parolla tamamilə eynidir. Fərqli parol seçin!");
+      setPassError(t.prof_pass_same);
       return;
     }
 
-    // Success fully updating natively
     localStorage.setItem("userPassword", newPass);
-    setPassSuccess("Parolunuz uğurla güncəlləndi!");
+    setPassSuccess(t.prof_pass_success);
     setOldPass("");
     setNewPass("");
   };
 
   const handleLogout = () => {
     localStorage.removeItem("userLoggedIn");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userPlan");
+    localStorage.removeItem("userAvatar");
     window.location.href = "/";
   };
 
@@ -101,18 +154,18 @@ export default function ProfilePage() {
       
       {/* Background Ambience */}
       <div className="absolute top-0 left-0 right-0 h-[60vh] z-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-600/10 blur-[150px] rounded-full mix-blend-screen" />
-        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-indigo-600/10 blur-[150px] rounded-full mix-blend-screen" />
+        <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#004E64]/10 blur-[150px] rounded-full mix-blend-screen" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-[#004E64]/10 blur-[150px] rounded-full mix-blend-screen" />
       </div>
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 mt-32 mb-24 relative z-10">
         
         <div className="mb-12">
           <motion.h1 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="text-4xl md:text-5xl font-black text-white tracking-tight mb-2">
-            Sizin Profiliniz
+            {t.prof_title}
           </motion.h1>
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-slate-400">
-            Fərdi məlumatlarınızı, rezervasiya və hesablarınızı idarə edin.
+            {t.prof_subtitle}
           </motion.p>
         </div>
 
@@ -121,7 +174,6 @@ export default function ProfilePage() {
           {/* LEFT: Profile Details & Password */}
           <div className="lg:col-span-4 space-y-8">
             
-            {/* User Card */}
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-zinc-900/60 backdrop-blur-3xl border border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col items-center">
               
               <div className="relative mb-6 group">
@@ -130,41 +182,102 @@ export default function ProfilePage() {
                 </div>
                 <button 
                   onClick={() => fileInputRef.current?.click()}
-                  className="absolute bottom-0 right-0 p-3 bg-blue-600 hover:bg-blue-500 rounded-full text-white shadow-lg border-2 border-zinc-900 transition-colors"
+                  className="absolute bottom-0 right-0 p-3 bg-[#004E64] hover:bg-[#006B8A] rounded-full text-white shadow-lg border-2 border-zinc-900 transition-colors"
                 >
                   <Camera className="w-5 h-5" />
                 </button>
                 <input type="file" ref={fileInputRef} onChange={handleImageUpload} accept="image/*" className="hidden" />
               </div>
 
-              <h2 className="text-2xl font-black text-white mb-1">Hesabınız</h2>
+              <h2 className="text-2xl font-black text-white mb-1">{t.prof_account}</h2>
               <div className="flex items-center gap-2 text-slate-400 font-medium bg-black/40 px-4 py-2 rounded-full border border-white/5 w-full justify-center mb-6">
                 <Mail className="w-4 h-4 text-slate-500" />
                 <span className="truncate">{userEmail}</span>
               </div>
 
-              {/* BECOME SELLER TOGGLE */}
-              <div className="w-full bg-black/30 border border-white/5 rounded-2xl p-4 mb-6 relative overflow-hidden group">
-                <div className={`absolute inset-0 bg-gradient-to-r transition-opacity duration-500 ${isSeller ? 'from-amber-600/20 to-orange-600/20 opacity-100' : 'from-indigo-600/10 to-blue-600/10 opacity-0 group-hover:opacity-100'}`} />
-                <div className="relative z-10 flex items-center justify-between">
-                   <div className="flex flex-col">
-                      <span className="text-sm font-black text-white">{isSeller ? "Satıcı Hesabı Aktivdir" : "Satıcı Ol"}</span>
-                      <span className="text-xs text-slate-400 mt-1 max-w-[180px]">Öz mülk və avtomobillərinizi satışa və ya icarəyə çıxarın.</span>
+              {/* PLAN STATUS CARD */}
+              <div className="w-full mb-6 p-5 bg-gradient-to-br from-zinc-800/40 to-zinc-900/40 border border-white/5 rounded-2xl relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-3">
+                    <ShieldCheck className={`w-5 h-5 ${userPlan === "PRO" ? "text-amber-500" : userPlan === "ELITE" ? "text-emerald-500" : "text-slate-600"}`} />
+                  </div>
+                  <div className="relative z-10">
+                    <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-1">{t.current_plan}</span>
+                    <div className="flex items-center gap-2">
+                       <span className="text-xl font-black text-white">
+                         {userPlan === "PRO" ? (t.plan_pro || "Valorum PRO") : 
+                          userPlan === "ELITE" ? "Valorum ELITE" : 
+                          (t.plan_basic || "Valorum BASIC")}
+                       </span>
+                       {userPlan === "BASIC" && (
+                         <Link href="/partnership" className="text-[10px] font-black text-amber-500 hover:text-amber-400 uppercase tracking-widest underline underline-offset-4 decoration-amber-500/30 transition-all">
+                           {t.btn_upgrade_plan || "Planı Yüksəlt"}
+                         </Link>
+                       )}
+                    </div>
+                  </div>
+              </div>
+
+              {/* PARTNERSHIP / SELLER STATUS */}
+              <div className="w-full bg-black/30 border border-white/5 rounded-2xl p-5 mb-6 relative overflow-hidden group">
+                <div className={`absolute inset-0 bg-gradient-to-r transition-opacity duration-500 ${(isSeller || jobTitle) ? 'from-emerald-600/10 to-emerald-600/5 opacity-100' : 'from-[#004E64]/10 to-[#004E64]/5 opacity-0 group-hover:opacity-100'}`} />
+                <div className="relative z-10 flex flex-col gap-4">
+                   <div className="flex items-center justify-between">
+                      <div className="flex flex-col">
+                         <span className="text-xs font-black text-slate-500 uppercase tracking-widest mb-1">Hesab Statusu</span>
+                         <span className="text-sm font-black text-white">
+                           {isSeller ? "Rəsmi Tərəfdaş (Satıcı)" : jobTitle ? "Rəsmi Əməkdaş" : "Standart İstifadəçi"}
+                         </span>
+                      </div>
+                      <div className={`p-2 rounded-xl ${(isSeller || jobTitle) ? 'bg-emerald-500/10 text-emerald-500' : 'bg-slate-500/10 text-slate-500'}`}>
+                         {(isSeller || jobTitle) ? <ShieldCheck className="w-5 h-5" /> : <Users className="w-5 h-5" />}
+                      </div>
                    </div>
-                   <button 
-                      onClick={() => {
-                        const newStatus = !isSeller;
-                        setIsSeller(newStatus);
-                        localStorage.setItem("userRole", newStatus ? "seller" : "user");
-                        window.dispatchEvent(new Event("roleChanged"));
-                      }}
-                      className={`w-14 h-8 rounded-full p-1 transition-colors duration-300 relative ${isSeller ? 'bg-amber-500' : 'bg-slate-700'}`}
-                   >
-                     <motion.div 
-                        animate={{ x: isSeller ? 24 : 0 }}
-                        className="w-6 h-6 bg-white rounded-full shadow-md"
-                     />
-                   </button>
+
+                   {jobTitle && (
+                      <div className="pt-2 border-t border-white/5">
+                         <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-1">Vəzifə</span>
+                         <span className="text-sm font-bold text-[#00A3CC]">{jobTitle}</span>
+                      </div>
+                   )}
+
+                   {!isSeller && !jobTitle && (
+                      <div className="pt-2 border-t border-white/5">
+                         {sellerStatus === "PENDING" ? (
+                            <div className="flex items-center gap-3 bg-amber-500/10 border border-amber-500/20 p-3 rounded-xl">
+                               <Clock className="w-4 h-4 text-amber-500 animate-pulse" />
+                               <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest text-wrap">Müraciətiniz nəzərdən keçirilir...</span>
+                            </div>
+                         ) : sellerStatus === "REJECTED" ? (
+                            <div className="flex flex-col gap-3">
+                               <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 p-3 rounded-xl">
+                                  <AlertCircle className="w-4 h-4 text-red-500" />
+                                  <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">Maalesef müraciətiniz rədd edildi.</span>
+                               </div>
+                               <button 
+                                 onClick={handleSellerRequest}
+                                 className="w-full py-3 bg-white text-black font-black text-[10px] uppercase tracking-widest rounded-xl hover:bg-slate-100 transition-all"
+                               >
+                                 Yenidən Müraciət Et
+                               </button>
+                            </div>
+                         ) : (
+                            <button 
+                              disabled={requestLoading}
+                              onClick={handleSellerRequest}
+                              className="w-full py-4 bg-[#004E64] hover:bg-[#006B8A] text-white font-black text-[10px] uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-black/20 disabled:opacity-50"
+                            >
+                              {requestLoading ? "Gözləyin..." : "Satıcı Olmaq Üçün Müraciət Et"}
+                            </button>
+                         )}
+                      </div>
+                   )}
+
+                   {isSeller && (
+                      <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 p-2 rounded-xl justify-center">
+                         <CheckCircle2 className="w-3 h-3 text-emerald-500" />
+                         <span className="text-[9px] font-black text-emerald-500 uppercase tracking-widest">Təsdiqlənmiş Hesab</span>
+                      </div>
+                   )}
                 </div>
               </div>
 
@@ -172,7 +285,7 @@ export default function ProfilePage() {
                 onClick={handleLogout}
                 className="w-full py-3 rounded-xl font-bold bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 transition-all flex items-center justify-center gap-2"
               >
-                <LogOut className="w-4 h-4" /> Sistemdən Çıxış Et
+                <LogOut className="w-4 h-4" /> {t.prof_logout_confirm || t.btn_logout}
               </button>
 
             </motion.div>
@@ -180,20 +293,20 @@ export default function ProfilePage() {
             {/* Password Management */}
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="bg-zinc-900/60 backdrop-blur-3xl border border-white/10 rounded-3xl p-8 shadow-2xl">
               <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/10">
-                <Lock className="w-5 h-5 text-indigo-400" />
-                <h3 className="text-xl font-black text-white">Təhlükəsizlik</h3>
+                <Lock className="w-5 h-5 text-[#00A3CC]" />
+                <h3 className="text-xl font-black text-white">{t.prof_security}</h3>
               </div>
               
               <form onSubmit={handleChangePassword} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Mövcud Parol</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-2">{t.prof_old_pass}</label>
                   <div className="relative">
                     <input 
                       type={showOldPass ? "text" : "password"} 
                       value={oldPass}
                       onChange={(e) => setOldPass(e.target.value)}
                       placeholder="••••••••" 
-                      className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white focus:outline-none focus:border-indigo-500 transition-colors placeholder:text-slate-700" 
+                      className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white focus:outline-none focus:border-[#006B8A] transition-colors placeholder:text-slate-700" 
                     />
                     <button
                       type="button"
@@ -203,17 +316,16 @@ export default function ProfilePage() {
                       {showOldPass ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
-                  <p className="text-xs text-slate-600 mt-1 italic">Defolt sınaq parolu: password123</p>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Yeni Parol</label>
+                  <label className="block text-xs font-bold text-slate-500 uppercase mb-2">{t.prof_new_pass}</label>
                   <div className="relative">
                     <input 
                       type={showNewPass ? "text" : "password"} 
                       value={newPass}
                       onChange={(e) => setNewPass(e.target.value)}
                       placeholder="••••••••" 
-                      className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white focus:outline-none focus:border-indigo-500 transition-colors placeholder:text-slate-700" 
+                      className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white focus:outline-none focus:border-[#006B8A] transition-colors placeholder:text-slate-700" 
                     />
                     <button
                       type="button"
@@ -241,7 +353,7 @@ export default function ProfilePage() {
                 </AnimatePresence>
 
                 <button type="submit" className="w-full py-3 mt-2 rounded-xl font-bold bg-white/10 hover:bg-white/20 text-white transition-colors border border-white/10">
-                  Şifrəni Yenilə
+                  {t.prof_update_pass}
                 </button>
               </form>
             </motion.div>
@@ -254,11 +366,11 @@ export default function ProfilePage() {
               
               <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
                 <div className="flex items-center gap-3">
-                  <Clock className="w-5 h-5 text-blue-400" />
-                  <h3 className="text-xl font-black text-white">Son Əməliyyatlar</h3>
+                  <Clock className="w-5 h-5 text-[#00A3CC]" />
+                  <h3 className="text-xl font-black text-white">{t.prof_recent_ops}</h3>
                 </div>
                 <div className="text-sm font-bold bg-black/40 text-slate-400 px-4 py-1.5 rounded-full border border-white/5">
-                  Ödənilmiş: {userOrders.length} məhsul
+                  {t.prof_paid_items} {userOrders.length} {t.word_product}
                 </div>
               </div>
 
@@ -277,8 +389,8 @@ export default function ProfilePage() {
                       <div className="flex-1 w-full space-y-2">
                         <div className="flex justify-between items-start">
                           <div>
-                            <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest ${order.type === "Satınalma" ? "bg-emerald-500/20 text-emerald-400" : "bg-blue-500/20 text-blue-400"}`}>
-                              {order.type}
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest ${order.type === "Satınalma" || order.type === "Purchase" ? "bg-emerald-500/20 text-emerald-400" : "bg-[#006B8A]/20 text-[#00A3CC]"}`}>
+                              {order.type === "Satınalma" || order.type === "Purchase" ? t.prof_order_type_sale : t.prof_order_type_rent}
                             </span>
                             <h4 className="text-lg font-black text-white mt-1 leading-tight">{order.title}</h4>
                           </div>
@@ -288,15 +400,15 @@ export default function ProfilePage() {
                         </div>
 
                         <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-400">
-                          {order.type === "İcarə" && (
+                          {(order.type === "İcarə" || order.type === "Rental") && (
                             <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-lg">
                               <CalendarRange className="w-3.5 h-3.5 text-slate-500" />
-                              {order.start} — {order.end} ({order.totalDays} gün)
+                              {order.start} — {order.end} ({order.totalDays} {t.word_day})
                             </div>
                           )}
                           <div className="flex items-center gap-1.5 bg-white/5 px-2.5 py-1 rounded-lg">
                             <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-                            Status: Təsdiqlənib
+                            {t.prof_status_ok}
                           </div>
                         </div>
                       </div>
@@ -309,9 +421,9 @@ export default function ProfilePage() {
                   <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-4">
                     <Car className="w-10 h-10 text-slate-500" />
                   </div>
-                  <h4 className="text-xl font-black text-white mb-2">Hələlik heç nə yoxdur</h4>
+                  <h4 className="text-xl font-black text-white mb-2">{t.prof_empty_title}</h4>
                   <p className="text-slate-400 max-w-sm">
-                    Siz hələ ki, heç bir eksklüziv maşın rezerv etməmisiniz və ya daşınmaz əmlak almamısınız.
+                    {t.prof_empty_desc}
                   </p>
                 </div>
               )}

@@ -22,7 +22,7 @@ export default function Navbar() {
   const [isSeller, setIsSeller] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [avatarUrl, setAvatarUrl] = useState("https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff");
+  const [avatarUrl, setAvatarUrl] = useState("https://ui-avatars.com/api/?name=User&background=004E64&color=fff");
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -140,14 +140,14 @@ export default function Navbar() {
         <div className="pointer-events-auto">
           <Link href="/" className="flex items-center gap-3">
             <motion.div 
-              className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-black text-lg shadow-2xl shadow-blue-500/30"
+              className="w-10 h-10 rounded-xl overflow-hidden shadow-2xl shadow-[#006B8A]/30 flex-shrink-0"
             >
-              S
+              <img src="/valorum-logo.png" alt="Valorum Logo" className="w-full h-full object-cover" />
             </motion.div>
             <motion.span 
               className={`text-2xl font-black tracking-tighter transition-colors duration-500 text-white`}
             >
-              Sphere
+              Valorum
             </motion.span>
           </Link>
         </div>
@@ -184,8 +184,8 @@ export default function Navbar() {
             className={`fixed inset-0 z-[120] bg-[#0a0a09]/98 backdrop-blur-3xl flex flex-col ${isMobile ? 'justify-start py-28 pr-6 pl-12 sm:pl-20' : 'justify-start py-20 px-6 sm:px-12 md:px-24'} overflow-y-auto`}
           >
             {/* Background Decor */}
-            <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
-            <div className="absolute bottom-[-20%] left-[-10%] w-[50vw] h-[50vw] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-[#004E64]/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-[-20%] left-[-10%] w-[50vw] h-[50vw] bg-[#004E64]/10 rounded-full blur-[120px] pointer-events-none" />
 
             <div className="flex flex-col lg:flex-row justify-between w-full max-w-7xl mx-auto items-start lg:items-center gap-12 lg:gap-10 relative z-10 pb-12">
               
@@ -204,7 +204,7 @@ export default function Navbar() {
                           <motion.div 
                             initial={{ width: 0 }} 
                             animate={isActive ? { width: 40 } : { width: 0 }} 
-                            className="h-[2px] bg-blue-500 inline-block transition-all duration-300 group-hover:bg-indigo-500" 
+                            className="h-[2px] bg-[#006B8A] inline-block transition-all duration-300 group-hover:bg-[#006B8A]" 
                           />
                         </span>
                         <div className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter transition-colors duration-500 ${isActive ? 'text-white' : 'text-slate-700 hover:text-white'}`}>
@@ -253,8 +253,8 @@ export default function Navbar() {
                   <div className="flex flex-col gap-6 w-full lg:items-end">
                     <div className="flex items-center gap-4 bg-white/5 p-4 rounded-3xl border border-white/10 w-full lg:w-max group">
                       <div className="text-right flex-1">
-                        <div className="text-sm font-bold text-slate-400">{t.nav_sphere_user}</div>
-                        <div className="text-lg font-black text-white group-hover:text-blue-400 transition-colors">{t.nav_verified_account}</div>
+                        <div className="text-sm font-bold text-slate-400">{t.nav_Valorum_user}</div>
+                        <div className="text-lg font-black text-white group-hover:text-[#00A3CC] transition-colors">{t.nav_verified_account}</div>
                       </div>
                       <Link href="/profile" className="w-16 h-16 rounded-full overflow-hidden border-2 border-white/20 relative">
                         <img src={avatarUrl} alt="Your Avatar" className="w-full h-full object-cover transition-transform group-hover:scale-110" />
@@ -265,7 +265,7 @@ export default function Navbar() {
                     </div>
 
                     <div className="flex flex-col w-full gap-3">
-                       <Link onClick={() => setIsOpen(false)} href="/profile" className="w-full lg:w-auto px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-black text-lg transition-colors flex items-center lg:justify-end justify-center gap-2">
+                       <Link onClick={() => setIsOpen(false)} href="/profile" className="w-full lg:w-auto px-8 py-4 rounded-full bg-[#004E64] hover:bg-[#006B8A] text-white font-black text-lg transition-colors flex items-center lg:justify-end justify-center gap-2">
                          {t.nav_dashboard} <ArrowUpRight className="w-5 h-5" />
                        </Link>
                     </div>
@@ -275,7 +275,7 @@ export default function Navbar() {
                     <p className="text-slate-400 font-medium mb-4 w-full lg:max-w-[250px]">
                       {t.nav_login_prompt}
                     </p>
-                    <Link onClick={() => setIsOpen(false)} href="/register" className="w-full lg:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-lg text-center transition-all shadow-xl shadow-blue-600/20">
+                    <Link onClick={() => setIsOpen(false)} href="/register" className="w-full lg:w-auto px-8 py-4 rounded-full bg-gradient-to-r from-[#004E64] to-[#00394A] hover:from-[#006B8A] hover:to-[#004E64] text-white font-black text-lg text-center transition-all shadow-xl shadow-[#004E64]/20">
                       {t.nav_free_register}
                     </Link>
                     <Link onClick={() => setIsOpen(false)} href="/login" className="w-full lg:w-auto px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 text-white font-black text-lg text-center transition-all">
@@ -288,9 +288,9 @@ export default function Navbar() {
                 <div className="flex items-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-full p-2 mt-4 w-full justify-between">
                    <div className="text-xs font-bold text-slate-500 px-4 uppercase flex items-center gap-2"><Globe className="w-4 h-4"/> {t.nav_lang || "DİL"}</div>
                    <div className="flex gap-2">
-                     <button onClick={() => setLang("en")} className={`px-4 py-2 rounded-full text-xs font-black transition-all ${lang === 'en' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}>EN</button>
-                     <button onClick={() => setLang("az")} className={`px-4 py-2 rounded-full text-xs font-black transition-all ${lang === 'az' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}>AZ</button>
-                     <button onClick={() => setLang("ru")} className={`px-4 py-2 rounded-full text-xs font-black transition-all ${lang === 'ru' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:text-white'}`}>RU</button>
+                     <button onClick={() => { setLang("en"); setIsOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-black transition-all ${lang === 'en' ? 'bg-[#004E64] text-white' : 'text-slate-400 hover:text-white'}`}>EN</button>
+                     <button onClick={() => { setLang("az"); setIsOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-black transition-all ${lang === 'az' ? 'bg-[#004E64] text-white' : 'text-slate-400 hover:text-white'}`}>AZ</button>
+                     <button onClick={() => { setLang("ru"); setIsOpen(false); }} className={`px-4 py-2 rounded-full text-xs font-black transition-all ${lang === 'ru' ? 'bg-[#004E64] text-white' : 'text-slate-400 hover:text-white'}`}>RU</button>
                    </div>
                 </div>
 

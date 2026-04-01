@@ -3,11 +3,13 @@
 import { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, Building, Car, CalendarCheck, LogOut, Settings, Menu, X, Home, UserCircle } from "lucide-react";
+import { LayoutDashboard, Users, Building, Car, CalendarCheck, LogOut, Settings, Menu, X, Home, UserCircle, Briefcase } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const { t } = useLanguage();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -24,22 +26,27 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const handleLogout = () => {
     localStorage.removeItem("userLoggedIn");
     localStorage.removeItem("userRole");
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("userPlan");
+    localStorage.removeItem("userAvatar");
     window.dispatchEvent(new Event("roleChanged"));
     window.location.href = "/";
   };
 
   const menu = [
-    { label: "Ümumi Panel", icon: <LayoutDashboard className="w-5 h-5" />, href: "/dashboard" },
-    { label: "İstifadəçilər", icon: <Users className="w-5 h-5" />, href: "/dashboard/users" },
-    { label: "Mülklər", icon: <Building className="w-5 h-5" />, href: "/dashboard/properties" },
-    { label: "Nəqliyyat", icon: <Car className="w-5 h-5" />, href: "/dashboard/transports" },
-    { label: "Sifarişlər", icon: <CalendarCheck className="w-5 h-5" />, href: "/dashboard/orders" },
-    { label: "Tənzimləmələr", icon: <Settings className="w-5 h-5" />, href: "/dashboard/settings" },
+    { label: t.side_dashboard, icon: <LayoutDashboard className="w-5 h-5" />, href: "/dashboard" },
+    { label: t.side_users, icon: <Users className="w-5 h-5" />, href: "/dashboard/users" },
+    { label: "Partnerships", icon: <Building className="w-5 h-5" />, href: "/dashboard/partnerships" },
+    { label: t.side_properties, icon: <Building className="w-5 h-5" />, href: "/dashboard/properties" },
+    { label: t.side_transports, icon: <Car className="w-5 h-5" />, href: "/dashboard/transports" },
+    { label: t.side_orders, icon: <CalendarCheck className="w-5 h-5" />, href: "/dashboard/orders" },
+    { label: "Applications", icon: <Briefcase className="w-5 h-5" />, href: "/dashboard/applications" },
+    { label: t.side_settings, icon: <Settings className="w-5 h-5" />, href: "/dashboard/settings" },
   ];
 
   const userLinks = [
-    { label: "Ana Səhifə", icon: <Home className="w-5 h-5" />, href: "/" },
-    { label: "Profilim", icon: <UserCircle className="w-5 h-5" />, href: "/profile" },
+    { label: t.side_home, icon: <Home className="w-5 h-5" />, href: "/" },
+    { label: t.side_profile, icon: <UserCircle className="w-5 h-5" />, href: "/profile" },
   ];
 
   return (
@@ -82,7 +89,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       `}>
         <div className="p-8 border-b border-white/5 hidden lg:block">
            <Link href="/dashboard" className="flex flex-col">
-              <span className="text-sm font-bold text-red-500 uppercase tracking-widest mb-1">Sphere OS</span>
+              <span className="text-sm font-bold text-red-500 uppercase tracking-widest mb-1">Valorum OS</span>
               <span className="text-3xl font-black tracking-tighter text-white">Admin<span className="text-red-500">.</span></span>
            </Link>
         </div>
@@ -99,7 +106,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
            ))}
 
            <div className="mt-8 mb-4 px-4">
-             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 px-2">İstifadəçi Görünüşü</span>
+             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 px-2">{t.side_user_view}</span>
            </div>
 
            {userLinks.map((item) => (
@@ -118,7 +125,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
              onClick={handleLogout}
              className="w-full flex items-center justify-center gap-3 px-4 py-4 rounded-2xl bg-white/5 border border-white/10 text-red-400 hover:bg-red-500/10 hover:border-red-500/30 font-bold transition-all"
            >
-             <LogOut className="w-5 h-5" /> Sistemdən Çıxış
+             <LogOut className="w-5 h-5" /> {t.side_logout}
            </button>
         </div>
       </aside>

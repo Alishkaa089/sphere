@@ -3,8 +3,9 @@
 import { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { generateProperties, generateVehicles } from "@/utils/mockData";
+import { generateProperties, generateVehicles, Property, Vehicle } from "../../../utils/mockData";
 import { CreditCard, ShieldCheck, Lock, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import { createOrder } from "../../../lib/actions";
 
 function CheckoutContent() {
   const router = useRouter();
@@ -32,8 +33,8 @@ function CheckoutContent() {
   const [showCvv, setShowCvv] = useState(false);
 
   const product = useMemo(() => {
-    if (type === "property") return generateProperties().find(p => p.id === id);
-    if (type === "transport") return generateVehicles().find(v => v.id === id);
+    if (type === "property") return generateProperties().find((p: Property) => p.id === id);
+    if (type === "transport") return generateVehicles().find((v: Vehicle) => v.id === id);
     return null;
   }, [id, type]);
 
@@ -41,12 +42,12 @@ function CheckoutContent() {
 
   const isSale = product.status === "Satış";
   
-  let totalRaw = product.priceRaw;
+  let totalRaw = product.priceRaw || product.price;
   let totalDays = 0;
   if (!isSale && start && end) {
     const diff = Math.ceil(Math.abs(new Date(end).getTime() - new Date(start).getTime()) / (1000 * 60 * 60 * 24));
     totalDays = diff;
-    totalRaw = product.priceRaw * diff;
+    totalRaw = (product.priceRaw || product.price) * diff;
   }
 
   // Formatting Handlers
@@ -106,10 +107,21 @@ function CheckoutContent() {
         localStorage.setItem(`reserved_${product.id}`, JSON.stringify(existing));
       }
       
-      setIsProcessing(false);
-      setIsSuccess(true);
+      // Save order to Database via Server Action
+      const userEmail = localStorage.getItem("userEmail") || "";
+      if (userEmail) {
+        createOrder({
+          title: product.title,
+          type: isSale ? "Satınalma" : "İcarə",
+          totalPrice: totalRaw
+        }, userEmail).then(res => {
+          if (res.success) {
+            console.log("Order saved to DB");
+          }
+        });
+      }
       
-      // Save order to "myOrders" for the Profile page timeline
+      // Keep localStorage for legacy Profile timeline (optional, but keep it for UI consistency if needed)
       let userOrders = [];
       const storedOrders = localStorage.getItem("myOrders");
       if (storedOrders) userOrders = JSON.parse(storedOrders);
@@ -167,8 +179,8 @@ function CheckoutContent() {
   return (
     <div className="min-h-screen bg-[#0a0a09] flex py-20 px-4 items-center justify-center relative overflow-hidden">
       
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-blue-600/20 blur-[150px] rounded-full mix-blend-screen pointer-events-none" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-indigo-600/20 blur-[150px] rounded-full mix-blend-screen pointer-events-none" />
+      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#004E64]/20 blur-[150px] rounded-full mix-blend-screen pointer-events-none" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-[#004E64]/20 blur-[150px] rounded-full mix-blend-screen pointer-events-none" />
 
       <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 z-10">
         
@@ -190,7 +202,7 @@ function CheckoutContent() {
                   value={cardName}
                   onChange={handleNameChange}
                   placeholder="John Doe" 
-                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors placeholder:text-slate-600" 
+                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#006B8A] transition-colors placeholder:text-slate-600" 
                 />
               </div>
               <div>
@@ -204,7 +216,7 @@ function CheckoutContent() {
                     value={cardNumber}
                     onChange={handleCardChange}
                     placeholder="0000 0000 0000 0000" 
-                    className="w-full bg-black/50 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors tracking-widest placeholder:text-slate-600" 
+                    className="w-full bg-black/50 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white focus:outline-none focus:border-[#006B8A] transition-colors tracking-widest placeholder:text-slate-600" 
                   />
                 </div>
               </div>
@@ -218,7 +230,7 @@ function CheckoutContent() {
                     value={expiry}
                     onChange={handleExpiryChange}
                     placeholder="AA/İİ" 
-                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors placeholder:text-slate-600" 
+                    className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#006B8A] transition-colors placeholder:text-slate-600" 
                   />
                 </div>
                 <div>
@@ -231,7 +243,7 @@ function CheckoutContent() {
                       value={cvv}
                       onChange={handleCvvChange}
                       placeholder="•••" 
-                      className="w-full bg-black/50 border border-white/10 rounded-xl pl-4 pr-12 py-3 text-white focus:outline-none focus:border-blue-500 transition-colors placeholder:text-slate-600" 
+                      className="w-full bg-black/50 border border-white/10 rounded-xl pl-4 pr-12 py-3 text-white focus:outline-none focus:border-[#006B8A] transition-colors placeholder:text-slate-600" 
                     />
                     <button 
                       type="button"
@@ -245,7 +257,7 @@ function CheckoutContent() {
               </div>
             </div>
 
-            <button disabled={isProcessing || !isFormValid()} type="submit" className="w-full mt-8 py-4 rounded-xl font-black text-lg transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-xl shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed">
+            <button disabled={isProcessing || !isFormValid()} type="submit" className="w-full mt-8 py-4 rounded-xl font-black text-lg transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-[#004E64] to-[#00394A] hover:from-[#006B8A] hover:to-[#004E64] text-white shadow-xl shadow-[#006B8A]/20 disabled:opacity-50 disabled:cursor-not-allowed">
               {isProcessing ? "İcra Edilir..." : `Ödə - $${totalRaw.toLocaleString()}`}
             </button>
             <p className="text-center text-xs font-bold text-slate-500 flex items-center justify-center gap-1.5 mt-4">

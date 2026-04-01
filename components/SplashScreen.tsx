@@ -3,16 +3,18 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const PROJECT_NAME = "Sphere";
+const PROJECT_NAME = "Valorum";
 const characters = Array.from(PROJECT_NAME);
 
 export default function SplashScreen({ children }: { children: React.ReactNode }) {
   const [stage, setStage] = useState<"initial" | "typing" | "paused" | "complete">("initial");
+  const [isRepeatVisit, setIsRepeatVisit] = useState(false);
 
   useEffect(() => {
     const visited = sessionStorage.getItem("hasVisitedSplash");
     if (visited) {
       setStage("complete");
+      setIsRepeatVisit(true);
       return;
     }
     
@@ -36,12 +38,13 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
     };
   }, []);
 
+  // Show a blank background during SSR and initial client mount
   if (stage === "initial") {
     return <div className="min-h-screen w-full bg-white dark:bg-black" />;
   }
 
-  // Pre-rendered layout for repeat visits
-  if (stage === "complete" && sessionStorage.getItem("hasVisitedSplash")) {
+  // Skip animations completely if it's a repeat visit in the same session
+  if (isRepeatVisit) {
     return <>{children}</>;
   }
 
@@ -54,16 +57,24 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
       <AnimatePresence>
         {stage !== "complete" && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-white dark:bg-black"
-            // The background fades out cleanly over 0.8s
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#0a0a09]"
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8, ease: customEase }}
           >
+            {/* Logo icon */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.7 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="w-20 h-20 rounded-2xl overflow-hidden shadow-2xl shadow-[#004E64]/40 mb-6"
+            >
+              <img src="/valorum-logo.png" alt="Valorum" className="w-full h-full object-cover" />
+            </motion.div>
+
+            {/* Animated brand name */}
             <motion.span 
               layoutId="brand-logo"
-              // When this span unmounts, Framer Motion magically animates it
-              // into the incoming Navbar logo that uses the exact same layoutId!
-              className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-slate-900 dark:text-white flex"
+              className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white flex"
               style={{ display: "inline-block" }}
             >
               <span className="flex">
@@ -84,6 +95,16 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
                 ))}
               </span>
             </motion.span>
+
+            {/* Subtle tagline */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+              className="mt-4 text-sm font-bold text-slate-600 uppercase tracking-widest"
+            >
+              Premium Platform
+            </motion.p>
           </motion.div>
         )}
       </AnimatePresence>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowLeft, Mail, Lock, User, UserPlus, AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-react";
+import { registerUser } from "@/lib/actions";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -43,28 +44,37 @@ export default function RegisterPage() {
 
     setLoading(true);
 
-    // Simulate Network Request
-    setTimeout(() => {
-      // Local storage full emulation for MVP seamless demonstration
-      localStorage.setItem("userEmail", email);
-      localStorage.setItem("userPassword", password);
-      // Give them a default avatar based on their newly provided name!
-      localStorage.setItem(
-        "userAvatar", 
-        `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0D8ABC&color=fff`
-      );
-      localStorage.setItem("userLoggedIn", "true");
-      window.dispatchEvent(new Event("avatarChanged")); // Sync Navbars Instantly
-
-      router.push("/profile");
-    }, 1500);
+    const performRegister = async () => {
+      const res = await registerUser({ email, password, name });
+      
+      if (res.error) {
+        setError(res.error);
+        setLoading(false);
+        return;
+      }
+      
+      if (res.success && res.user) {
+        localStorage.setItem("userEmail", res.user.email);
+        localStorage.setItem("userName", res.user.name || "");
+        localStorage.setItem("userRole", res.user.role);
+        localStorage.setItem("userPlan", res.user.plan || "BASIC");
+        localStorage.setItem("userAvatar", res.user.avatar || "");
+        localStorage.setItem("userLoggedIn", "true");
+        window.dispatchEvent(new Event("avatarChanged"));
+        window.dispatchEvent(new Event("roleChanged"));
+        window.dispatchEvent(new Event("planChanged"));
+        router.push("/");
+      }
+    };
+    
+    performRegister();
   };
 
   return (
     <div className="min-h-screen bg-[#0a0a09] flex flex-col items-center justify-center relative overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
       
       {/* Abstract Glowing Background */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-indigo-600/10 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[#004E64]/10 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-emerald-600/10 blur-[150px] rounded-full pointer-events-none" />
 
       {/* Top Left Navigation Back */}
@@ -82,7 +92,7 @@ export default function RegisterPage() {
         <div className="text-center mb-8">
           <Link href="/">
              <h1 className="text-5xl font-black tracking-tighter text-white drop-shadow-lg mb-2 inline-block">
-               Sphere<span className="text-indigo-500">.</span>
+               Valorum<span className="text-[#006B8A]">.</span>
              </h1>
           </Link>
           <p className="text-slate-400 font-medium">Sonsuz qlobal rahatlığa buradan başlayın.</p>
@@ -105,7 +115,7 @@ export default function RegisterPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value.replace(/\d/g, ""))}
                 placeholder="Özünüzü təqdim edin"
-                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium"
+                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:border-[#006B8A] focus:ring-1 focus:ring-[#006B8A] transition-all font-medium"
               />
             </div>
 
@@ -118,7 +128,7 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Sizin əlaqə e-poçtunuz"
-                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium"
+                className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:border-[#006B8A] focus:ring-1 focus:ring-[#006B8A] transition-all font-medium"
               />
             </div>
 
@@ -132,7 +142,7 @@ export default function RegisterPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium"
+                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white placeholder:text-slate-600 focus:outline-none focus:border-[#006B8A] focus:ring-1 focus:ring-[#006B8A] transition-all font-medium"
                 />
                 <button
                   type="button"
@@ -154,7 +164,7 @@ export default function RegisterPage() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Şifrəni təkrar daxil edin"
-                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white placeholder:text-slate-600 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium"
+                  className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 pr-12 text-white placeholder:text-slate-600 focus:outline-none focus:border-[#006B8A] focus:ring-1 focus:ring-[#006B8A] transition-all font-medium"
                 />
                 <button
                   type="button"
@@ -176,7 +186,7 @@ export default function RegisterPage() {
             <button 
               type="submit" 
               disabled={loading}
-              className="w-full py-4 rounded-xl font-black text-lg transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-600 text-white shadow-xl shadow-indigo-500/20 disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+              className="w-full py-4 rounded-xl font-black text-lg transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-[#004E64] to-purple-600 hover:from-[#006B8A] hover:to-purple-600 text-white shadow-xl shadow-[#006B8A]/20 disabled:opacity-50 disabled:cursor-not-allowed mt-6"
             >
               {loading ? (
                 <span className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin"></span>
@@ -189,7 +199,7 @@ export default function RegisterPage() {
           <div className="mt-8 text-center border-t border-white/5 pt-6 relative">
             <p className="text-slate-400 font-medium text-sm">
               Artıq hesabınız var?{" "}
-              <Link href="/login" className="text-white font-bold hover:text-indigo-400 transition-colors">
+              <Link href="/login" className="text-white font-bold hover:text-[#00A3CC] transition-colors">
                 Giriş Edin
               </Link>
             </p>
