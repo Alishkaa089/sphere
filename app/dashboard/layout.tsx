@@ -18,7 +18,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
      }
   }, []);
 
-  // Close sidebar on path change
   useEffect(() => {
     setIsSidebarOpen(false);
   }, [pathname]);
@@ -52,11 +51,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-[#0a0a09] flex text-white font-sans overflow-hidden relative">
       
-      {/* Abstract Background for Layout */}
       <div className="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] bg-red-600/10 blur-[150px] rounded-full mix-blend-screen pointer-events-none" />
       <div className="fixed bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-orange-600/10 blur-[150px] rounded-full mix-blend-screen pointer-events-none" />
 
-      {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-[#0a0a09]/80 backdrop-blur-xl border-b border-white/5 z-[100] flex items-center justify-between px-6">
         <Link href="/dashboard" className="flex items-center gap-2">
            <span className="text-xl font-black tracking-tighter text-white">Admin<span className="text-red-500">.</span></span>
@@ -69,7 +66,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </button>
       </div>
 
-      {/* Sidebar Overlay for Mobile */}
       <AnimatePresence>
         {isSidebarOpen && (
           <motion.div 
@@ -82,7 +78,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         )}
       </AnimatePresence>
 
-      {/* Sidebar */}
       <aside className={`
         fixed lg:static inset-y-0 left-0 w-72 bg-[#0a0a09] lg:bg-black/40 backdrop-blur-3xl border-r border-white/5 flex flex-col z-[110] transition-transform duration-300 lg:translate-x-0
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
@@ -130,7 +125,6 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
       </aside>
 
-      {/* Main Content Pane */}
       <main className="flex-1 relative z-10 h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent pt-16 lg:pt-0">
         {children}
       </main>

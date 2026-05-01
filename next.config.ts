@@ -1,15 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* Performance & Development Optimizations */
-  reactStrictMode: false, // Disabling strict mode in dev can sometimes speed up re-renders
+  
+  reactStrictMode: false, 
   logging: {
     fetches: {
       fullUrl: true,
     },
   },
   experimental: {
-    // These might help with compilation speed and page transitions
+    
     optimizePackageImports: ["lucide-react", "framer-motion", "lucide-react"],
   },
 };

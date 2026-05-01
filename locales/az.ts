@@ -1,5 +1,5 @@
 export const az = {
-  // Navbar
+  
   nav_home: "Ana Səhifə",
   nav_property: "Əmlak Kataloqu",
   nav_transport: "Nəqliyyat Parkı",
@@ -13,7 +13,6 @@ export const az = {
   nav_login: "Daxil Ol",
   nav_lang: "DİL",
 
-  // Footer
   footer_desc: "Limitləri aşan lüks həyat tərzinizi qlobal miqyasda mühəndislik dəqiqliyi ilə idarə edin. Valorum – daha çoxuna sahib olun.",
   footer_cat: "Kataloq",
   footer_premium_prop: "Premium Əmlaklar",
@@ -28,11 +27,9 @@ export const az = {
   footer_email_ph: "E-poçt ünvanınız",
   footer_rights: "Valorum Inc. Bütün hüquqlar qorunur.",
 
-  // General Actions
   btn_back_home: "Ana Səhifəyə Qayıt",
   btn_logout: "Çıxış",
   
-  // Home Page
   home_badge: "Məhdudiyyətsiz Lüks Dünyası",
   home_title_1: "SƏNİN",
   home_title_2: "MÜSTƏSNA",
@@ -53,7 +50,6 @@ export const az = {
   home_trust_title: "Güzəştsiz Etimad.",
   home_trust_desc: "İcarəyə verdiyimiz hər bir məhsul Valorum-un eksklüziv 100 bəndlik yoxlamasından keçir və sığortalanır. Rahatlığınıza qeydsiz-şərtsiz zəmanət veririk.",
 
-  // Catalog Pages
   cat_prop_badge: "Qlobal Şəbəkə",
   cat_prop_title: "Eksklüziv Əmlaklar.",
   cat_prop_desc: "Səliqəli şəkildə idarə olunan premium daşınmaz əmlakın möhtəşəm kolleksiyası.",
@@ -66,7 +62,6 @@ export const az = {
   cat_loc_title: "Qlobal Məkanlar.",
   cat_loc_desc: "Lüks şəbəkələrimizin dünya üzrə harada fəaliyyət göstərdiyini kəşf edin.",
 
-  // Additional Catalog UI bindings
   premium_property_badge: "Premium Daşınmaz Əmlak",
   hero_title_part1: "Xəyallarınızdakı",
   hero_title_part2: "evi kəşf edin.",
@@ -90,7 +85,6 @@ export const az = {
   no_property_found_description: "meyarlarınıza uyğun elan tapılmadı.",
   reset_filters: "Filtrləri Sıfırla",
   
-  // Product Details & Booking Widget
   det_desc_title: "Təsvir",
   det_specs_title: "Texniki Göstəricilər",
   det_inspect_badge: "100-Bəndlik Yoxlamadan Keçib",
@@ -121,7 +115,6 @@ export const az = {
   widget_total: "Yekun Məbləğ",
   widget_auth_req: "Sifarişi tamamlamaq üçün qeydiyyatdan keçin və ya daxil olun.",
 
-  // Auth / Profile
   auth_welcome: "Xoş Gəldiniz",
   auth_create_account: "Yeni Hesab Yaradın",
   auth_email: "E-poçt Ünvanı",
@@ -150,7 +143,6 @@ export const az = {
   prof_empty_title: "Hələ ki, heç nə yoxdur",
   prof_empty_desc: "Siz hələ heç bir eksklüziv maşın rezerv etməmisiniz və ya daşınmaz əmlak almamısınız.",
 
-  // Checkout
   checkout_title: "Ödəniş Terminalı",
   checkout_subtitle: "Şifrələnmiş bağlantı vasitəsilə təhlükəsiz ödəniş.",
   checkout_order_summary: "Sifariş Xülasəsi",
@@ -185,7 +177,6 @@ export const az = {
   word_sec: "s",
   word_product: "məhsul",
 
-  // Car Categories
   cat_all: "Bütün Nəqliyyat",
   cat_sports: "İdman Maşınları",
   cat_suv: "Premium SUV",
@@ -194,7 +185,6 @@ export const az = {
 
   select_country: "Ölkə Seçin",
 
-  // Profile Additional
   prof_become_seller: "Satıcı Ol",
   prof_seller_active: "Satıcı Hesabı Aktivdir",
   prof_seller_desc: "Öz əmlak və maşınlarınızı satışa və ya icarəyə çıxarın.",
@@ -207,7 +197,6 @@ export const az = {
   prof_order_type_sale: "Satınalma",
   prof_order_type_rent: "İcarə",
 
-  // Admin Dashboard
   admin_title: "Ümumi İdarəetmə Paneli",
   admin_subtitle: "Valorum qlobal satış və icarə statistikası.",
   admin_live_data: "Canlı Məlumatlar",
@@ -232,7 +221,6 @@ export const az = {
   admin_no_orders: "Hələ ki, real sifariş (rezerv) qeydə alınmayıb.",
   admin_no_orders_desc: "Saytda məhsul aldıqdan sonra burada görünəcək.",
 
-  // Dashboard Sidebar
   side_dashboard: "Ümumi Panel",
   side_users: "İstifadəçi İdarəetməsi",
   side_properties: "Əmlaklar",
@@ -244,7 +232,6 @@ export const az = {
   side_profile: "Profilim",
   side_logout: "Sistemdən Çıxış",
 
-  // Admin Users Page
   admin_users_title: "İstifadəçilərin İdarə Olunması",
   admin_users_subtitle: "Platformada qeydiyyatdan keçmiş bütün istifadəçilər.",
   admin_users_search_ph: "E-poçt və ya ad üzrə axtar...",
@@ -259,7 +246,6 @@ export const az = {
   admin_users_no_found: "İstifadəçi tapılmadı.",
   admin_users_role_error: "Rolu yeniləmək mümkün olmadı.",
 
-  // Admin Properties Page
   admin_props_title: "Bütün mülklər",
   admin_props_subtitle: "Bazadakı {count} əmlaka nəzarət edin.",
   admin_props_search_ph: "Əmlak axtar...",
@@ -272,7 +258,6 @@ export const az = {
   admin_props_th_action: "Fəaliyyət",
   admin_props_no_found: "Əmlak tapılmadı.",
 
-  // Admin Transports Page
   admin_trans_title: "Bütün Maşınlar",
   admin_trans_subtitle: "Bazadakı {count} avtomobilə nəzarət edin.",
   admin_trans_search_ph: "Nəqliyyat axtar...",
@@ -285,7 +270,6 @@ export const az = {
   admin_trans_th_action: "Fəaliyyət",
   admin_trans_no_found: "Nəqliyyat tapılmadı.",
 
-  // Admin Orders Page
   admin_orders_title: "Sifariş Tarixçəsi",
   admin_orders_subtitle: "Edilən bütün real rezervlər və alınan mülklər.",
   admin_orders_search_ph: "Sifariş ID axtar...",
@@ -300,7 +284,6 @@ export const az = {
   admin_orders_type_sale: "Birdəfəlik Satış",
   admin_orders_status_all_ok: "Təsdiqləndi",
 
-  // Admin Settings Page
   admin_settings_title: "Ümumi Tənzimləmələr",
   admin_settings_subtitle: "Bütün qlobal platforma tənzimləmələri və arxitektura quruluşu.",
   admin_settings_section_config: "Mərkəzi Konfiqurasiya",
@@ -317,7 +300,6 @@ export const az = {
   admin_settings_security_desc: "Heç bir kənar giriş bloku aşkar olunmayıb. Baza tam zəmanətlə işləyir.",
   admin_settings_logs_title: "Sistem Jurnalı (Loglar)",
 
-  // Admin Add Pages (Forms)
   admin_add_back: "Geri Qayıt",
   admin_add_prop_title: "Yeni Mülk Əlavə Edin",
   admin_add_success_title: "Uğurla Əlavə Edildi!",
@@ -351,7 +333,6 @@ export const az = {
   admin_add_label_battery: "Batareya / Məsafə",
   admin_add_ph_battery: "Məsələn: 100 kWh / 500 km",
 
-  // Generic
   word_sale: "Satış",
   word_rent: "İcarə",
   word_azerbaijan: "Azərbaycan",
@@ -363,7 +344,6 @@ export const az = {
   all_prop_cat_land: "Torpaq Sahəsi",
   toast_error: "Xəta baş verdi.",
 
-  // Countries (Exhaustive)
   country_USA: "ABŞ",
   country_Germany: "Almaniya",
   country_Australia: "Avstraliya",
@@ -420,7 +400,6 @@ export const az = {
   country_Czech_Republic: "Çexiya",
   country_China: "Çin",
 
-  // About Page
   about_badge: "Valorum Haqqında",
   about_hero_title_1: "Sənin hələdə evin",
   about_hero_title_2: "vəya maşının yoxdu?",
@@ -460,7 +439,6 @@ export const az = {
   about_cta_btn_reg: "Pulsuz Qeydiyyat",
   about_cta_btn_cat: "Kataloqa Bax",
 
-  // Careers Page
   careers_badge: "Valorum Careers",
   careers_hero_title: "Gələcəyi bizimlə qur.",
   careers_hero_desc: "Valorum qlobal bir platforma quran kiçik, güclü bir komandadır. Buraya daxil olanlar — sadəcə işçi deyil, qurucu olur.",
@@ -516,7 +494,6 @@ export const az = {
   careers_role_ops_1: "Real Estate Partnerships Lead",
   careers_role_ops_2: "Customer Success Manager",
 
-  // Partnership Page
   partner_badge: "B2B & Tərəfdaşlıq",
   partner_hero_title_1: "Birlikdə daha ",
   partner_hero_title_2: "güclü.",
@@ -598,7 +575,6 @@ export const az = {
   partner_type_option_tech: "Texnoloji Tərəfdaş",
   partner_type_option_other: "Digər",
 
-  // Showcase Component
   showcase_badge: "İnteraktiv Kəşf",
   showcase_title_1: "Sürüşdür.",
   showcase_title_2: "Hiss et.",
@@ -619,7 +595,6 @@ export const az = {
   showcase_hint_3d: "3D • Sürüşdür",
   showcase_hint_mouse: "Mouse ilə üzərindən keç — kartlar sənə tabe olacaq",
 
-  // Plans & Limits
   limit_reached_title: "Limitə Çatdınız",
   limit_reached_desc: "Sizin planınızla maksimum 5 elan paylaşıla bilər. 50-yə qədər elan paylamaq üçün planı yüksəldin.",
   btn_upgrade_plan: "Planı Yüksəlt",
@@ -628,5 +603,28 @@ export const az = {
   plan_benefit_pro: "50-yə qədər elan paylama imkanı",
   upgrade_success: "Plan uğurla yüksəldildi!",
   current_plan: "Hazırkı Plan",
-  listings_usage: "Elan Limit İstifadəsi"
+  listings_usage: "Elan Limit İstifadəsi",
+
+  fav_title: "Sevimlilər",
+  fav_my_products: "Sevimli Məhsullarım",
+  fav_login_desc: "Sevimli məhsulları görmək üçün hesabınıza daxil olun.",
+  fav_login_btn: "Daxil Ol",
+  fav_loading: "Yüklənir...",
+  fav_saved_count: "məhsul saxlanılıb",
+  fav_none_selected: "Hələ heç bir məhsul seçilməyib.",
+  fav_tab_all: "Hamısı",
+  fav_tab_properties: "Mülklər",
+  fav_tab_vehicles: "Nəqliyyat",
+  fav_empty_title: "Sevimlilər boşdur",
+  fav_empty_desc: "Mülk və ya nəqliyyat səhifəsindən ürək ikonuna basaraq saxlayın.",
+  fav_view_property: "Mülklərə Bax",
+  fav_view_transport: "Nəqliyyata Bax",
+  fav_section_properties: "Mülklər",
+  fav_section_vehicles: "Nəqliyyat",
+  fav_sale_badge: "Satış",
+  fav_rent_badge: "Kirayə",
+  fav_lease_badge: "İcarə",
+  fav_sale_price: "Satış qiyməti",
+  fav_monthly_rent: "Aylıq kirayə",
+  fav_daily_rent: "Günlük icarə"
 };

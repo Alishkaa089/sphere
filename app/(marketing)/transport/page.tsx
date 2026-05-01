@@ -9,6 +9,7 @@ import { UNIQUE_COUNTRIES, COUNTRY_CITIES } from "@/constants/countries";
 import { getVehicles } from "@/lib/actions";
 import Footer from "@/components/common/Footer";
 import { useLanguage } from "@/context/LanguageContext";
+import FavoriteButton from "@/components/common/FavoriteButton";
 
 const CATEGORIES = ["Bütün Transportlar", "İdman Avtomobilləri", "Premium Yolsuzluq (SUV)", "Eksklüziv", "Elektrik"];
 
@@ -96,7 +97,6 @@ export default function TransportPage() {
   return (
     <div className="min-h-screen bg-[#0a0a09] flex flex-col relative overflow-hidden">
       
-      {/* ── Premium Hero Background Image ── */}
       <div className="absolute top-0 left-0 right-0 h-[75vh] z-0 overflow-hidden">
         <Image 
           src="/trans_v4.png"
@@ -112,7 +112,6 @@ export default function TransportPage() {
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-32 pb-24 relative z-10">
         
-        {/* ── HERO CONTENT ── */}
         <div className="max-w-4xl mb-12 sm:mb-20 pt-10">
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
@@ -143,7 +142,6 @@ export default function TransportPage() {
           </motion.p>
         </div>
 
-        {/* ── FLOATING GLASS SEARCH BAR ── */}
         <motion.div 
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -162,7 +160,6 @@ export default function TransportPage() {
               />
             </div>
 
-            {/* Country Selector */}
             <div className="relative w-full md:w-56 z-50">
               <button 
                 onClick={() => { setIsCountryDropdownOpen(!isCountryDropdownOpen); setIsCityDropdownOpen(false); }}
@@ -203,7 +200,6 @@ export default function TransportPage() {
               </AnimatePresence>
             </div>
 
-            {/* City Dropdown */}
             <div className="relative w-full md:w-56 z-40">
               <button 
                 onClick={() => { if (selectedCountry !== "Bütün Ölkələr") setIsCityDropdownOpen(!isCityDropdownOpen); setIsCountryDropdownOpen(false); }}
@@ -299,8 +295,11 @@ export default function TransportPage() {
                        <div className={`backdrop-blur-md border border-white/30 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg ${vSale ? 'bg-emerald-500/80' : 'bg-purple-500/80'}`}>
                          {vSale ? t.for_sale : t.for_rent}
                        </div>
-                       <div className="bg-black/80 backdrop-blur-md border border-white/10 text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-full flex items-center gap-1">
-                          <Globe className="w-3 h-3 text-[#00A3CC]" /> {getCountryLabel(v.country)}
+                       <div className="flex items-center gap-2">
+                         <div className="bg-black/80 backdrop-blur-md border border-white/10 text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2 rounded-full flex items-center gap-1">
+                           <Globe className="w-3 h-3 text-[#00A3CC]" /> {getCountryLabel(v.country)}
+                         </div>
+                         <FavoriteButton productId={v.id} type="vehicle" />
                        </div>
                     </div>
 

@@ -30,7 +30,6 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#0a0a09] text-white flex flex-col relative overflow-hidden">
 
-      {/* Hero Section */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden">
         <motion.div 
            initial={{ scale: 1.1 }}
@@ -49,7 +48,6 @@ export default function Home() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
           
-          {/* Badge */}
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -60,7 +58,6 @@ export default function Home() {
             <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.25em] text-white/80">{t.home_badge}</span>
           </motion.div>
 
-          {/* Stylized Heading - REDUCED SIZE FOR BALANCED FIT */}
           <div className="flex flex-col items-center mb-6 md:mb-8 select-none cursor-default">
             
             <motion.div 
@@ -95,7 +92,6 @@ export default function Home() {
 
           </div>
           
-          {/* Subtitle */}
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -107,7 +103,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Global Reach Section */}
       <section className="py-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-white/5 relative">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#004E64]/5 blur-[150px] rounded-full pointer-events-none" />
         
@@ -147,7 +142,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Properties */}
       <section className="py-32 bg-zinc-900/20 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
@@ -211,7 +205,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Transport */}
       <section className="py-32 border-t border-white/5 relative">
         <div className="absolute inset-0 bg-gradient-to-tr from-[#002B38]/10 to-transparent pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -273,7 +266,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust & Verification */}
       <section className="py-32 bg-[#002B38]/10 border-t border-white/5 overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 text-center">
             <motion.div 

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Building, ArrowLeft, Upload, CheckCircle, AlertCircle } from "lucide-react";
+import { Building, ArrowLeft, Upload, CheckCircle, AlertCircle, Camera, Link2 } from "lucide-react";
 import Link from "next/link";
 import { createProperty } from "@/lib/actions";
 import { UNIQUE_COUNTRIES } from "@/constants/countries";
@@ -15,6 +15,8 @@ export default function AddPropertyPage() {
    const [loading, setLoading] = useState(false);
    const [error, setError] = useState("");
    const [success, setSuccess] = useState(false);
+   const [imgMode, setImgMode] = useState<"url" | "file">("url");
+   const fileInputRef = useRef<HTMLInputElement>(null);
    
    const CATEGORIES = [t.all_prop_cat_premium, t.all_prop_cat_penthouse, t.all_prop_cat_smart, t.all_prop_cat_sea, t.all_prop_cat_office, t.all_prop_cat_land];
 
@@ -200,16 +202,63 @@ export default function AddPropertyPage() {
 
                   <div className="md:col-span-2">
                      <label className="block text-xs font-black text-slate-500 uppercase tracking-widest mb-3 text-center">{t.admin_add_label_img}</label>
-                     <div className="relative">
-                        <Upload className="w-5 h-5 absolute left-6 top-1/2 -translate-y-1/2 text-slate-500" />
-                        <input 
-                          type="text" 
-                          value={formData.img}
-                          onChange={(e) => setFormData({...formData, img: e.target.value})}
-                          placeholder={t.admin_add_ph_img}
-                          className="w-full bg-black/40 border border-white/10 rounded-2xl pl-16 pr-6 py-4 text-white focus:outline-none focus:border-amber-500 transition-all font-bold text-sm"
-                        />
+                     <div className="flex gap-2 mb-4 p-1 bg-black/40 border border-white/10 rounded-2xl">
+                        <button type="button" onClick={() => setImgMode("url")} className={`flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${imgMode === 'url' ? 'bg-amber-500 text-black' : 'text-slate-400 hover:text-white'}`}>
+                           <Link2 className="w-3.5 h-3.5" /> URL
+                        </button>
+                        <button type="button" onClick={() => setImgMode("file")} className={`flex-1 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest flex items-center justify-center gap-2 transition-all ${imgMode === 'file' ? 'bg-amber-500 text-black' : 'text-slate-400 hover:text-white'}`}>
+                           <Camera className="w-3.5 h-3.5" /> Cihazdan
+                        </button>
                      </div>
+                     {imgMode === "url" ? (
+                        <div className="relative">
+                           <Upload className="w-5 h-5 absolute left-6 top-1/2 -translate-y-1/2 text-slate-500" />
+                           <input
+                             type="text"
+                             value={formData.img.startsWith("data:") ? "" : formData.img}
+                             onChange={(e) => setFormData({...formData, img: e.target.value})}
+                             placeholder={t.admin_add_ph_img}
+                             className="w-full bg-black/40 border border-white/10 rounded-2xl pl-16 pr-6 py-4 text-white focus:outline-none focus:border-amber-500 transition-all font-bold text-sm"
+                           />
+                        </div>
+                     ) : (
+                        <div className="flex items-center gap-5">
+                           <div
+                             onClick={() => fileInputRef.current?.click()}
+                             className="w-28 h-28 flex-shrink-0 rounded-3xl bg-black/40 border-2 border-dashed border-white/10 hover:border-amber-500/50 flex flex-col items-center justify-center overflow-hidden relative group cursor-pointer transition-all active:scale-95"
+                           >
+                             {formData.img.startsWith("data:") ? (
+                               <img src={formData.img} alt="Preview" className="w-full h-full object-cover" />
+                             ) : (
+                               <Camera className="w-7 h-7 text-slate-600 group-hover:text-amber-500 transition-colors" />
+                             )}
+                             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                               <span className="text-[10px] uppercase font-black text-white tracking-widest">Dəyiş</span>
+                             </div>
+                           </div>
+                           <div className="flex-1">
+                             <p className="text-sm font-black text-slate-300">Qalereyadan seçin</p>
+                             <p className="text-xs text-slate-500 mt-1 font-medium">Format: JPG, PNG. Yalnız yüksək keyfiyyətli şəkillər.</p>
+                             {formData.img.startsWith("data:") && (
+                               <button type="button" onClick={() => setFormData({...formData, img: "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg"})} className="mt-2 text-[10px] font-black text-red-400 hover:text-red-300 uppercase tracking-widest">Sil</button>
+                             )}
+                           </div>
+                           <input
+                             type="file"
+                             accept="image/*"
+                             ref={fileInputRef}
+                             onChange={(e) => {
+                               const file = e.target.files?.[0];
+                               if (file) {
+                                 const reader = new FileReader();
+                                 reader.onloadend = () => setFormData({...formData, img: reader.result as string});
+                                 reader.readAsDataURL(file);
+                               }
+                             }}
+                             className="hidden"
+                           />
+                        </div>
+                     )}
                      <p className="mt-2 text-xs text-slate-600 italic">{t.admin_add_img_note}</p>
                   </div>
                </div>

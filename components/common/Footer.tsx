@@ -8,7 +8,6 @@ export default function Footer() {
   return (
     <footer className="border-t border-white/5 bg-[#0a0a09] relative z-10 w-full overflow-hidden">
       
-      {/* Subtle Background Ambience */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#004E64]/5 blur-[150px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 py-16 md:py-24 relative z-10">

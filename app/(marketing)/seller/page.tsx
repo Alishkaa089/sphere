@@ -8,14 +8,12 @@ import { UNIQUE_COUNTRIES, COUNTRY_CITIES } from "@/constants/countries";
 import { useLanguage } from "@/context/LanguageContext";
 import { createProperty, createVehicle, getUserProperties, getUserVehicles, upgradeUserPlan } from "@/lib/actions";
 
-/* ─── Upgrade Modal ─── */
 function UpgradeModal({ isOpen, onClose, onUpgrade, t }: any) {
   const [step, setStep] = useState<"plans" | "payment" | "contact" | "success">("plans");
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ name: "", phone: "", message: "" });
   const [planType, setPlanType] = useState<"PRO" | "ELITE">("PRO");
 
-  // Payment Form
   const [cardData, setCardData] = useState({ number: "", expiry: "", cvc: "" });
 
   const handleProStart = () => {
@@ -34,7 +32,6 @@ function UpgradeModal({ isOpen, onClose, onUpgrade, t }: any) {
     const email = localStorage.getItem("userEmail");
     if (!email) return;
 
-    // Simulate Payment and Upgrade
     const res = await upgradeUserPlan(email, "PRO");
     setLoading(false);
     
@@ -51,8 +48,8 @@ function UpgradeModal({ isOpen, onClose, onUpgrade, t }: any) {
   const handleContactSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate Elite Inquiry
-    const res = await (upgradeUserPlan as any).submitEliteContact?.(formData) || { success: true }; // Fallback since actions might be different
+    
+    const res = await (upgradeUserPlan as any).submitEliteContact?.(formData) || { success: true }; 
     setLoading(false);
     if (res.success) {
       setStep("success");
@@ -84,7 +81,6 @@ function UpgradeModal({ isOpen, onClose, onUpgrade, t }: any) {
 
         <div className="flex flex-col md:flex-row h-full">
            
-           {/* LEFT DECOR (Hidden on mobile) */}
            <div className="hidden md:flex md:w-1/3 bg-gradient-to-br from-[#004E64] to-[#001D25] p-12 flex-col justify-end relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2" />
               <div className="relative z-10">
@@ -104,7 +100,6 @@ function UpgradeModal({ isOpen, onClose, onUpgrade, t }: any) {
                      </div>
 
                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        {/* PRO PLAN */}
                         <div className="bg-white/5 border border-amber-500/20 rounded-3xl p-6 hover:border-amber-500/50 transition-all group flex flex-col">
                            <div className="flex justify-between items-start mb-6">
                               <div>
@@ -135,7 +130,6 @@ function UpgradeModal({ isOpen, onClose, onUpgrade, t }: any) {
                            <button onClick={handleProStart} className="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-black uppercase tracking-widest rounded-xl transition-all">Başla</button>
                         </div>
 
-                        {/* ELITE PLAN */}
                         <div className="bg-white/5 border border-white/5 rounded-3xl p-6 hover:border-white/20 transition-all flex flex-col">
                            <div className="flex justify-between items-start mb-6">
                               <div>
@@ -269,7 +263,6 @@ export default function SellerDashboard() {
   const [userPlan, setUserPlan] = useState("BASIC");
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
-  // Form State
   const [title, setTitle] = useState("");
   const [country, setCountry] = useState(UNIQUE_COUNTRIES[0]);
   const [city, setCity] = useState(COUNTRY_CITIES[UNIQUE_COUNTRIES[0]][0]);
@@ -280,7 +273,6 @@ export default function SellerDashboard() {
   const [selectedImg, setSelectedImg] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Dynamic Specific Fields
   const [desc, setDesc] = useState("");
   const [beds, setBeds] = useState("");
   const [baths, setBaths] = useState("");
@@ -416,7 +408,6 @@ export default function SellerDashboard() {
         t={t}
       />
 
-      {/* Background Decor */}
       <div className="absolute top-0 right-[-10%] w-[600px] h-[600px] bg-amber-600/10 rounded-full blur-[150px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 flex-grow">

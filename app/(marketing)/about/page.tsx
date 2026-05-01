@@ -64,17 +64,14 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-[#0a0a09] text-white flex flex-col overflow-hidden">
 
-      {/* ── HERO SECTION ── */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
 
-        {/* Ambient background glows */}
         <div className="absolute inset-0 z-0">
           <div className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-[#004E64]/20 rounded-full blur-[160px]" />
           <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-[#006B8A]/15 rounded-full blur-[140px]" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#004E64]/5 rounded-full blur-[200px]" />
         </div>
 
-        {/* Grid texture overlay */}
         <div
           className="absolute inset-0 z-0 opacity-[0.03]"
           style={{
@@ -86,7 +83,6 @@ export default function AboutPage() {
 
         <div className="relative z-10 max-w-6xl mx-auto px-6 pt-32 pb-20 text-center">
 
-          {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -97,7 +93,6 @@ export default function AboutPage() {
             <span className="text-xs font-black uppercase tracking-widest text-[#7FD4E8]">{t.about_badge}</span>
           </motion.div>
 
-          {/* Main Tagline — the user's quote */}
           <motion.div
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -132,7 +127,6 @@ export default function AboutPage() {
             </div>
           </motion.div>
 
-          {/* Sub-description */}
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -142,10 +136,8 @@ export default function AboutPage() {
             {t.about_description}
           </motion.p>
 
-          {/* CTA Buttons - REMOVED AS PER USER REQUEST */}
         </div>
 
-        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -161,10 +153,8 @@ export default function AboutPage() {
         </motion.div>
       </section>
 
-      {/* ── INTERACTIVE 3D SHOWCASE ── */}
       <Interactive3DShowcase />
 
-      {/* ── STATS BAR ── */}
       <section className="border-t border-white/5 bg-[#0a0a09]/80 backdrop-blur-xl relative z-10">
         <div className="max-w-5xl mx-auto px-6 py-16">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -191,12 +181,10 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── STORY SECTION ── */}
       <section className="py-32 relative overflow-hidden">
         <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#004E64]/10 rounded-full blur-[120px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-          {/* Left: Text */}
           <motion.div {...fadeLeft}>
             <div className="text-[#00A3CC] font-black uppercase tracking-widest text-sm mb-4 flex items-center gap-2">
               <span className="w-8 h-[2px] bg-[#00A3CC] inline-block" />
@@ -218,7 +206,6 @@ export default function AboutPage() {
             </div>
           </motion.div>
 
-          {/* Right: Visual card stack */}
           <motion.div
             initial={{ opacity: 0, x: 60 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -226,9 +213,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             className="relative"
           >
-            {/* Back card */}
             <div className="absolute -top-4 -right-4 w-full h-full rounded-3xl bg-[#006B8A]/10 border border-[#006B8A]/20" />
-            {/* Front card */}
             <div className="relative bg-zinc-900/60 border border-white/10 rounded-3xl p-10 backdrop-blur-xl">
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#004E64] to-[#006B8A] flex items-center justify-center text-white font-black text-2xl shadow-lg">
@@ -249,7 +234,6 @@ export default function AboutPage() {
                   <div className="text-xs font-bold text-slate-500">{t.about_story_card_team}</div>
                 </div>
               </div>
-              {/* Decorative badge */}
               <div className="absolute top-6 right-6 bg-[#004E64]/30 border border-[#006B8A]/40 rounded-full px-3 py-1 text-xs font-black text-[#7FD4E8] uppercase tracking-wider">
                 Est. 2024
               </div>
@@ -258,7 +242,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── VALUES SECTION ── */}
       <section className="py-32 border-t border-white/5 relative overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-[#004E64]/5 blur-[150px] rounded-full pointer-events-none" />
 
@@ -301,7 +284,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── CITIES WE SERVE ── */}
       <section className="py-24 border-t border-white/5 bg-zinc-900/20">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div {...fadeUp} className="flex flex-col md:flex-row justify-between items-end mb-14 gap-6">
@@ -341,7 +323,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── FINAL CTA ── */}
       <section className="py-32 border-t border-white/5 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#004E64]/10 via-transparent to-[#002B38]/10 pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#004E64]/8 blur-[150px] rounded-full pointer-events-none" />

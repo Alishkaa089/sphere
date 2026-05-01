@@ -73,11 +73,9 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-[#0a0a09] flex flex-col items-center justify-center relative overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
       
-      {/* Abstract Glowing Background */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[#004E64]/10 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-emerald-600/10 blur-[150px] rounded-full pointer-events-none" />
 
-      {/* Top Left Navigation Back */}
       <Link href="/" className="absolute top-8 left-8 flex items-center gap-2 text-slate-400 hover:text-white transition-colors z-20 group">
         <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
         <span className="font-bold">Ana Səhifəyə Qayıt</span>
@@ -100,7 +98,6 @@ export default function RegisterPage() {
 
         <div className="bg-zinc-900/60 backdrop-blur-3xl border border-white/10 sm:rounded-3xl p-8 sm:p-10 shadow-2xl relative overflow-hidden">
           
-          {/* Subtle decoration inside box */}
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 blur-3xl rounded-full" />
 
           <h2 className="text-2xl font-black text-white mb-6 relative">Yeni Hesab Yaradın</h2>

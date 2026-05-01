@@ -38,12 +38,10 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
     };
   }, []);
 
-  // Show a blank background during SSR and initial client mount
   if (stage === "initial") {
     return <div className="min-h-screen w-full bg-white dark:bg-black" />;
   }
 
-  // Skip animations completely if it's a repeat visit in the same session
   if (isRepeatVisit) {
     return <>{children}</>;
   }
@@ -53,7 +51,6 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
   return (
     <div className="relative min-h-screen w-full bg-white dark:bg-black overflow-hidden font-sans">
       
-      {/* ─── Animated Text Overlay ─── */}
       <AnimatePresence>
         {stage !== "complete" && (
           <motion.div
@@ -61,7 +58,6 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8, ease: customEase }}
           >
-            {/* Logo icon */}
             <motion.div
               initial={{ opacity: 0, scale: 0.7 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -71,7 +67,6 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
               <img src="/valorum-logo.png" alt="Valorum" className="w-full h-full object-cover" />
             </motion.div>
 
-            {/* Animated brand name */}
             <motion.span 
               layoutId="brand-logo"
               className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-white flex"
@@ -96,7 +91,6 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
               </span>
             </motion.span>
 
-            {/* Subtle tagline */}
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -109,7 +103,6 @@ export default function SplashScreen({ children }: { children: React.ReactNode }
         )}
       </AnimatePresence>
 
-      {/* ─── Main UI Reveal ─── */}
       {stage === "complete" && (
         <motion.div
           className="w-full min-h-screen relative z-10"

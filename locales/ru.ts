@@ -1,5 +1,5 @@
 export const ru = {
-  // Navbar
+  
   nav_home: "Главная страница",
   nav_property: "Каталог недвижимости",
   nav_transport: "Транспортный парк",
@@ -13,7 +13,6 @@ export const ru = {
   nav_login: "Войти",
   nav_lang: "ЯЗЫК",
 
-  // Footer
   footer_desc: "Управляйте своим безграничным роскошным стилем жизни по всему миру с инженерной точностью. Valorum – осмельтесь владеть большим.",
   footer_cat: "Каталог",
   footer_premium_prop: "Премиум Недвижимость",
@@ -28,11 +27,9 @@ export const ru = {
   footer_email_ph: "Ваш адрес электронной почты",
   footer_rights: "Valorum Inc. Все права защищены.",
 
-  // General Actions
   btn_back_home: "Вернуться на главную",
   btn_logout: "Выйти",
   
-  // Home Page
   home_badge: "Мир безграничной роскоши",
   home_title_1: "ВАША",
   home_title_2: "ИСКЛЮЧИТЕЛЬНАЯ",
@@ -53,7 +50,6 @@ export const ru = {
   home_trust_title: "Бескомпромиссное доверие.",
   home_trust_desc: "Каждый продукт, который мы сдаем в аренду, застрахован эксклюзивной 100-точечной проверкой Valorum. Мы гарантируем ваше спокойствие безусловно.",
 
-  // Catalog Pages
   cat_prop_badge: "Глобальная сеть",
   cat_prop_title: "Эксклюзивная недвижимость.",
   cat_prop_desc: "Прекрасно подобранная коллекция элитной недвижимости, управляемая безупречно.",
@@ -66,7 +62,6 @@ export const ru = {
   cat_loc_title: "Глобальные локации.",
   cat_loc_desc: "Узнайте, где работают наши элитные сети по всему миру.",
 
-  // Additional Catalog UI bindings
   premium_property_badge: "Элитная недвижимость",
   hero_title_part1: "Найдите свой",
   hero_title_part2: "дом мечты.",
@@ -90,7 +85,6 @@ export const ru = {
   no_property_found_description: "нет объявлений, соответствующих вашим критериям.",
   reset_filters: "Сбросить фильтры",
   
-  // Product Details & Booking Widget
   det_desc_title: "Описание",
   det_specs_title: "Технические характеристики",
   det_inspect_badge: "Пройдена 100-точечная проверка",
@@ -121,7 +115,6 @@ export const ru = {
   widget_total: "Итоговая сумма",
   widget_auth_req: "Чтобы завершить заказ, пожалуйста, зарегистрируйтесь или войдите.",
 
-  // Auth / Profile
   auth_welcome: "Добро пожаловать",
   auth_create_account: "Создать новый аккаунт",
   auth_email: "E-mail адрес",
@@ -150,7 +143,6 @@ export const ru = {
   prof_empty_title: "Пока ничего нет",
   prof_empty_desc: "Вы еще не бронировали эксклюзивные автомобили и не покупали недвижимость.",
 
-  // Checkout
   checkout_title: "Платежный терминал",
   checkout_subtitle: "Безопасная оплата через зашифрованное соединение.",
   checkout_order_summary: "Детали заказа",
@@ -185,7 +177,6 @@ export const ru = {
   word_sec: "с",
   word_product: "тов.",
 
-  // Car Categories
   cat_all: "Весь транспорт",
   cat_sports: "Спорткары",
   cat_suv: "Премиальные внедорожники",
@@ -194,7 +185,6 @@ export const ru = {
 
   select_country: "Выберите страну",
 
-  // Profile Additional
   prof_become_seller: "Стать продавцом",
   prof_seller_active: "Аккаунт продавца активен",
   prof_seller_desc: "Выставляйте на продажу или в аренду свою недвижимость и автомобили.",
@@ -207,7 +197,6 @@ export const ru = {
   prof_order_type_sale: "Покупка",
   prof_order_type_rent: "Аренда",
 
-  // Admin Dashboard
   admin_title: "Общая панель управления",
   admin_subtitle: "Глобальная статистика продаж и аренды Valorum.",
   admin_live_data: "Живые данные",
@@ -232,7 +221,6 @@ export const ru = {
   admin_no_orders: "Реальных заказов (бронирований) пока нет.",
   admin_no_orders_desc: "Как только вы купите продукт на сайте, он появится здесь.",
 
-  // Dashboard Sidebar
   side_dashboard: "Общая панель",
   side_users: "Управление пользователями",
   side_properties: "Недвижимость",
@@ -244,7 +232,6 @@ export const ru = {
   side_profile: "Мой профиль",
   side_logout: "Выйти из системы",
 
-  // Admin Users Page
   admin_users_title: "Управление пользователями",
   admin_users_subtitle: "Все зарегистрированные пользователи на платформе.",
   admin_users_search_ph: "Поиск по e-mail или имени...",
@@ -259,7 +246,6 @@ export const ru = {
   admin_users_no_found: "Пользователи не найдены.",
   admin_users_role_error: "Не удалось обновить роль.",
 
-  // Admin Properties Page
   admin_props_title: "Все объекты",
   admin_props_subtitle: "Управление {count} объектами в базе данных.",
   admin_props_search_ph: "Поиск недвижимости...",
@@ -272,7 +258,6 @@ export const ru = {
   admin_props_th_action: "Действие",
   admin_props_no_found: "Недвижимость не найдена.",
 
-  // Admin Transports Page
   admin_trans_title: "Весь транспорт",
   admin_trans_subtitle: "Управление {count} транспортными средствами в базе данных.",
   admin_trans_search_ph: "Поиск транспорта...",
@@ -285,7 +270,6 @@ export const ru = {
   admin_trans_th_action: "Действие",
   admin_trans_no_found: "Транспорт не найден.",
 
-  // Admin Orders Page
   admin_orders_title: "История заказов",
   admin_orders_subtitle: "Все реальные бронирования и купленная недвижимость.",
   admin_orders_search_ph: "Поиск по ID заказа...",
@@ -300,7 +284,6 @@ export const ru = {
   admin_orders_type_sale: "Единоразовая продажа",
   admin_orders_status_all_ok: "Подтверждено",
 
-  // Admin Settings Page
   admin_settings_title: "Общие настройки",
   admin_settings_subtitle: "Глобальная конфигурация платформы и архитектурная структура.",
   admin_settings_section_config: "Центральная конфигурация",
@@ -317,7 +300,6 @@ export const ru = {
   admin_settings_security_desc: "Несанкционированного доступа не обнаружено. База данных работает с полной гарантией.",
   admin_settings_logs_title: "Системные логи",
 
-  // Admin Add Pages (Forms)
   admin_add_back: "Вернуться назад",
   admin_add_prop_title: "Добавить новую недвижимость",
   admin_add_success_title: "Успешно добавлено!",
@@ -351,7 +333,6 @@ export const ru = {
   admin_add_label_battery: "Батарея / Запас хода",
   admin_add_ph_battery: "напр. 100 kWh / 500 km",
 
-  // Generic
   word_sale: "Продажа",
   word_rent: "Аренда",
   word_azerbaijan: "Азербайджан",
@@ -363,7 +344,6 @@ export const ru = {
   all_prop_cat_land: "Земельные участки",
   toast_error: "Произошла ошибка.",
 
-  // Countries (Exhaustive)
   country_USA: "США",
   country_Germany: "Германия",
   country_Australia: "Австралия",
@@ -420,7 +400,6 @@ export const ru = {
   country_Czech_Republic: "Чехия",
   country_China: "Китай",
 
-  // About Page
   about_badge: "О Valorum",
   about_hero_title_1: "ВСЕ ЕЩЕ НЕТ",
   about_hero_title_2: "ДОМА ИЛИ МАШИНЫ?",
@@ -460,7 +439,6 @@ export const ru = {
   about_cta_btn_reg: "Бесплатная регистрация",
   about_cta_btn_cat: "Посмотреть каталог",
 
-  // Careers Page
   careers_badge: "Valorum Careers",
   careers_hero_title: "Стройте будущее с нами.",
   careers_hero_desc: "Valorum — это небольшая сильная команда, строящая глобальную платформу. Те, кто приходят сюда, не просто сотрудники, они становятся сооснователями.",
@@ -516,7 +494,6 @@ export const ru = {
   careers_role_ops_1: "Real Estate Partnerships Lead",
   careers_role_ops_2: "Customer Success Manager",
 
-  // Partnership Page
   partner_badge: "B2B и партнерство",
   partner_hero_title_1: "Сильнее ",
   partner_hero_title_2: "вместе.",
@@ -598,7 +575,6 @@ export const ru = {
   partner_type_option_tech: "Технологический партнер",
   partner_type_option_other: "Другое",
 
-  // Showcase Component
   showcase_badge: "Интерактивное открытие",
   showcase_title_1: "Скролль.",
   showcase_title_2: "Чувствуй.",
@@ -619,7 +595,6 @@ export const ru = {
   showcase_hint_3d: "3D • Наведи",
   showcase_hint_mouse: "Наведи мышкой — карточки последуют за тобой",
 
-  // Plans & Limits
   limit_reached_title: "Лимит исчерпан",
   limit_reached_desc: "С вашим планом можно разместить не более 5 объявлений. Для размещения до 50 объявлений обновите план.",
   btn_upgrade_plan: "Обновить план",
@@ -628,5 +603,28 @@ export const ru = {
   plan_benefit_pro: "До 50 объявлений",
   upgrade_success: "План успешно обновлен!",
   current_plan: "Текущий План",
-  listings_usage: "Использование лимита"
+  listings_usage: "Использование лимита",
+
+  fav_title: "Избранное",
+  fav_my_products: "Мои избранные товары",
+  fav_login_desc: "Войдите, чтобы увидеть избранные товары.",
+  fav_login_btn: "Войти",
+  fav_loading: "Загрузка...",
+  fav_saved_count: "товаров сохранено",
+  fav_none_selected: "Ещё ничего не выбрано.",
+  fav_tab_all: "Все",
+  fav_tab_properties: "Недвижимость",
+  fav_tab_vehicles: "Транспорт",
+  fav_empty_title: "Избранное пусто",
+  fav_empty_desc: "Перейдите к недвижимости или транспорту и нажмите на иконку сердца.",
+  fav_view_property: "Смотреть недвижимость",
+  fav_view_transport: "Смотреть транспорт",
+  fav_section_properties: "Недвижимость",
+  fav_section_vehicles: "Транспорт",
+  fav_sale_badge: "Продажа",
+  fav_rent_badge: "Аренда",
+  fav_lease_badge: "Аренда",
+  fav_sale_price: "Цена продажи",
+  fav_monthly_rent: "Ежемесячная аренда",
+  fav_daily_rent: "Ежедневная аренда"
 };

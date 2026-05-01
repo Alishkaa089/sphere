@@ -20,7 +20,6 @@ export default function ProfilePage() {
   const [requestLoading, setRequestLoading] = useState(false);
   const [userPlan, setUserPlan] = useState("BASIC");
 
-  // Passwords
   const [oldPass, setOldPass] = useState("");
   const [newPass, setNewPass] = useState("");
   const [showOldPass, setShowOldPass] = useState(false);
@@ -31,23 +30,20 @@ export default function ProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    // If not logged in, immediately redirect to login/register
+    
     if (localStorage.getItem("userLoggedIn") !== "true") {
       window.location.href = "/login";
       return;
     }
 
-    // Load Orders from legacy storage initially if any
     const storedOrders = localStorage.getItem("myOrders");
     if (storedOrders) {
       setUserOrders(JSON.parse(storedOrders).reverse());
     }
 
-    // Load Profile
     const storedAvatar = localStorage.getItem("userAvatar");
     if (storedAvatar) setAvatarUrl(storedAvatar);
     
-    // Simulate generic email or load
     const storedEmail = localStorage.getItem("userEmail");
     if (storedEmail) setUserEmail(storedEmail);
 
@@ -63,7 +59,7 @@ export default function ProfilePage() {
     window.addEventListener("planChanged", onPlanChange);
 
     if (storedEmail) {
-      // Find user to get real status from DB
+      
       getAllUsers().then(res => {
          if (res.success && res.users) {
             const me = res.users.find((u: any) => u.email === storedEmail);
@@ -80,7 +76,6 @@ export default function ProfilePage() {
          }
       });
 
-      // Load real orders from DB
       getOrdersByUserEmail(storedEmail).then(res => {
          if (res.success && res.orders) {
             setUserOrders(res.orders);
@@ -159,7 +154,6 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-[#0a0a09] flex flex-col relative overflow-hidden">
       
-      {/* Background Ambience */}
       <div className="absolute top-0 left-0 right-0 h-[60vh] z-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#004E64]/10 blur-[150px] rounded-full mix-blend-screen" />
         <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-[#004E64]/10 blur-[150px] rounded-full mix-blend-screen" />
@@ -178,7 +172,6 @@ export default function ProfilePage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           
-          {/* LEFT: Profile Details & Password */}
           <div className="lg:col-span-4 space-y-8">
             
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-zinc-900/60 backdrop-blur-3xl border border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col items-center">
@@ -202,7 +195,6 @@ export default function ProfilePage() {
                 <span className="truncate">{userEmail}</span>
               </div>
 
-              {/* PLAN STATUS CARD */}
               <div className="w-full mb-6 p-5 bg-gradient-to-br from-zinc-800/40 to-zinc-900/40 border border-white/5 rounded-2xl relative overflow-hidden group">
                   <div className="absolute top-0 right-0 p-3">
                     <ShieldCheck className={`w-5 h-5 ${userPlan === "PRO" ? "text-amber-500" : userPlan === "ELITE" ? "text-emerald-500" : "text-slate-600"}`} />
@@ -224,7 +216,6 @@ export default function ProfilePage() {
                   </div>
               </div>
 
-              {/* PARTNERSHIP / SELLER STATUS */}
               <div className="w-full bg-black/30 border border-white/5 rounded-2xl p-5 mb-6 relative overflow-hidden group">
                 <div className={`absolute inset-0 bg-gradient-to-r transition-opacity duration-500 ${(isSeller || jobTitle) ? 'from-emerald-600/10 to-emerald-600/5 opacity-100' : 'from-[#004E64]/10 to-[#004E64]/5 opacity-0 group-hover:opacity-100'}`} />
                 <div className="relative z-10 flex flex-col gap-4">
@@ -297,7 +288,6 @@ export default function ProfilePage() {
 
             </motion.div>
 
-            {/* Password Management */}
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1 }} className="bg-zinc-900/60 backdrop-blur-3xl border border-white/10 rounded-3xl p-8 shadow-2xl">
               <div className="flex items-center gap-3 mb-6 pb-4 border-b border-white/10">
                 <Lock className="w-5 h-5 text-[#00A3CC]" />
@@ -367,7 +357,6 @@ export default function ProfilePage() {
 
           </div>
 
-          {/* RIGHT: Order History Grid */}
           <div className="lg:col-span-8">
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.2 }} className="bg-zinc-900/60 backdrop-blur-3xl border border-white/10 rounded-3xl p-8 shadow-2xl min-h-[600px] flex flex-col">
               
@@ -386,13 +375,11 @@ export default function ProfilePage() {
                   {userOrders.map((order) => (
                     <div key={order.id} className="bg-black/40 border border-white/5 p-4 rounded-2xl flex flex-col sm:flex-row gap-5 items-start sm:items-center hover:bg-black/60 transition-colors">
                       
-                      {/* Thumbnail */}
                       <div className="w-full sm:w-32 h-24 rounded-xl overflow-hidden flex-shrink-0 relative border border-white/10 hidden sm:block">
                         <img src={order.img} alt={order.title} className="w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-black/20" />
                       </div>
 
-                      {/* Content */}
                       <div className="flex-1 w-full space-y-2">
                         <div className="flex justify-between items-start">
                           <div>

@@ -56,11 +56,9 @@ export default function CountryPortfolioPage({ params }: { params: Promise<{ cou
   return (
     <div className="min-h-screen bg-[#0a0a09] text-white pt-24 pb-12 flex flex-col relative overflow-hidden">
       
-      {/* Immersive Dark Background Lights */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#004E64]/5 rounded-full blur-[150px] pointer-events-none z-0" />
       <div className="absolute top-[30%] left-[-10%] w-[500px] h-[500px] bg-[#004E64]/5 rounded-full blur-[120px] pointer-events-none z-0" />
 
-      {/* Header with Back Button */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex-grow relative z-10">
         
         <div className="flex items-center gap-6 mb-12">
@@ -145,7 +143,6 @@ export default function CountryPortfolioPage({ params }: { params: Promise<{ cou
                   );
               }
 
-              // TRANSPORT CARD
               const isVehicleSale = isSale(item.status);
               const transStatusLocale = isVehicleSale ? (t.for_sale || "Satış") : (t.for_rent || "İcarə");
               return (

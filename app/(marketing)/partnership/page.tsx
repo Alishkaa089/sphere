@@ -134,11 +134,7 @@ export default function PartnershipPage() {
         }
       `}</style>
       
-      {/* Rest of JSX remains the same, but inputs updated in the return below */}
-      {/* For brevity, I will skip re-typing the entire hero/benefit section as they are unchanged, 
-          only updating the Contact Form section inside the main return */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Hero code from viewed file... */}
         <div className="absolute top-[-10%] left-[-5%] w-[600px] h-[600px] bg-[#004E64]/20 rounded-full blur-[160px]" />
         <div className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-[#006B8A]/15 rounded-full blur-[140px]" />
         
@@ -186,7 +182,6 @@ export default function PartnershipPage() {
         </div>
       </section>
 
-      {/* Skipping Who-We-Are and Benefits sections details as they are unchanged... */}
       <section className="py-24 border-t border-white/5 bg-zinc-900/10">
           <div className="max-w-7xl mx-auto px-6 text-center mb-16">
             <div className="text-[#00A3CC] font-black uppercase tracking-widest text-xs mb-3">{t.partner_who_badge}</div>
@@ -320,7 +315,6 @@ export default function PartnershipPage() {
         </div>
       </section>
 
-      {/* ── UPDATED CONTACT FORM SECTION ── */}
       <section id="contact" className="py-24 border-t border-white/5 relative">
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           <div>

@@ -2,6 +2,7 @@
 
 import { prisma } from './prisma'
 import bcrypt from 'bcryptjs'
+import { sendResetCodeEmail } from './mail'
 
 export async function getProperties() {
   try {
@@ -98,7 +99,6 @@ export async function registerUser(data: any) {
     const { password, name } = data;
     const email = data.email.toLowerCase().trim();
     
-    // Check if user exists
     const existingUser = await (prisma as any).user.findUnique({
       where: { email }
     });
@@ -115,7 +115,7 @@ export async function registerUser(data: any) {
         password: hashedPassword,
         name,
         avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=004E64&color=fff`,
-        role: email === "adminyekdi@gmail.com" ? "admin" : "seller",
+        role: email === "adminyekdi@gmail.com" ? "admin" : "user",
         plan: "BASIC"
       }
     });
@@ -175,7 +175,7 @@ export async function socialLogin(userData: { email: string; name: string; avata
     });
 
     if (!user) {
-      // Create new user if not exists
+      
       const randomPassword = Math.random().toString(36).slice(-10) + Math.random().toString(36).slice(-10);
       const hashedPassword = await bcrypt.hash(randomPassword, 10);
       
@@ -190,7 +190,7 @@ export async function socialLogin(userData: { email: string; name: string; avata
         }
       });
     } else {
-      // If user exists, update their name if it was empty (shouldn't happen with the new flow)
+      
       if (!user.name && userData.name) {
         user = await userModel.update({
           where: { id: user.id },
@@ -221,7 +221,6 @@ export async function loginUser(data: any) {
     const email = data.email.toLowerCase().trim();
     const { password } = data;
 
-    // Special Master Login for Admin
     if (email === "adminyekdi@gmail.com" && password === "AdminYekdi123") {
       let user = await (prisma as any).user.findUnique({
         where: { email }
@@ -262,7 +261,6 @@ export async function loginUser(data: any) {
       where: { email }
     });
     
-    // Auto-downgrade check
     if (user && user.plan === "PRO" && user.planExpiresAt) {
       if (new Date() > new Date(user.planExpiresAt)) {
         user = await (prisma as any).user.update({
@@ -317,7 +315,6 @@ export async function createProperty(data: any, userEmail: string) {
       return { error: 'İstifadəçi tapılmadı.' };
     }
 
-    // CHECK LIMIT
     const [propCount, vehCount] = await Promise.all([
       propModel.count({ where: { userId: user.id } }),
       (p.vehicle || p.Vehicle).count({ where: { userId: user.id } })
@@ -364,7 +361,6 @@ export async function createVehicle(data: any, userEmail: string) {
       return { error: 'İstifadəçi tapılmadı.' };
     }
 
-    // CHECK LIMIT
     const [propCount, vehCount] = await Promise.all([
       (prisma as any).property.count({ where: { userId: user.id } }),
       (prisma as any).vehicle.count({ where: { userId: user.id } })
@@ -431,7 +427,6 @@ export async function createOrder(data: any, userEmail: string) {
       }
     });
 
-    // If it's a SALE, mark the product as SOLD
     if (data.type === "Satınalma" && data.productId) {
       const isProp = await p.property.findUnique({ where: { id: data.productId } });
       if (isProp) {
@@ -470,7 +465,7 @@ export async function getReservedDates(productId: string) {
 export async function getAdminStats() {
   try {
     const p = prisma as any;
-    // Defensive model access
+    
     const userModel = p.user || p.User || p.users;
     const propModel = p.property || p.Property || p.properties;
     const transModel = p.vehicle || p.Vehicle || p.vehicles || p.transport;
@@ -516,7 +511,7 @@ export async function getAllUsers() {
     }
 
     try {
-      // Primary: ORM select
+      
       const users = await userModel.findMany({
         select: {
           id: true,
@@ -534,7 +529,7 @@ export async function getAllUsers() {
       });
       return { success: true, users };
     } catch (ormError: any) {
-      // Fallback: Raw SQL if fields are "unknown" to the client index
+      
       if (ormError.message?.includes('Unknown field')) {
         const rawUsers = await p.$queryRawUnsafe(`
           SELECT id, email, name, role, plan, planStartDate, planExpiresAt, sellerRequestStatus, jobTitle, createdAt 
@@ -581,7 +576,7 @@ export async function getAllOrdersAdmin() {
     const orderModel = p.order || p.Order || p.orders;
     
     if (!orderModel) {
-        return { success: true, orders: [] }; // Fallback
+        return { success: true, orders: [] }; 
     }
 
     const orders = await orderModel.findMany({
@@ -664,10 +659,9 @@ export async function getUserPlan(userEmail: string) {
     });
     if (!user) return "BASIC";
 
-    // CHECK EXPIRATION
     if (user.plan === "PRO" && user.planExpiresAt) {
       if (new Date() > new Date(user.planExpiresAt)) {
-        // AUTO DOWNGRADE
+        
         await p.user.update({
           where: { id: user.id },
           data: { plan: "BASIC", planStartDate: null, planExpiresAt: null }
@@ -802,7 +796,6 @@ export async function requestSellerStatus(email: string) {
     const p = prisma as any;
     const userModel = p.user || p.User || p.users;
     
-    // Check if already seller or already pending
     const user = await userModel.findUnique({ where: { email } });
     if (!user) return { success: false, error: "İstifadəçi tapılmadı." };
     if (user.role === "seller") return { success: false, error: "Siz artıq satıcısınız." };
@@ -991,3 +984,234 @@ export async function getOrdersByUserEmail(email: string) {
   }
 }
 
+export async function toggleFavorite(userEmail: string, productId: string, type: "property" | "vehicle") {
+  try {
+    const p = prisma as any;
+    const userModel = p.user || p.User || p.users;
+    const favModel = p.favorite || p.Favorite;
+
+    const user = await userModel.findUnique({ where: { email: userEmail } });
+    if (!user) return { error: 'İstifadəçi tapılmadı.' };
+
+    if (favModel) {
+      const existing = await favModel.findFirst({ where: { userId: user.id, productId } });
+      if (existing) {
+        await favModel.delete({ where: { id: existing.id } });
+        return { success: true, action: 'removed' };
+      } else {
+        await favModel.create({ data: { userId: user.id, productId, type } });
+        return { success: true, action: 'added' };
+      }
+    } else {
+      const { randomUUID } = require('crypto');
+      const rows: any[] = await p.$queryRawUnsafe(
+        `SELECT id FROM Favorite WHERE userId = ? AND productId = ? LIMIT 1`, user.id, productId
+      );
+      if (rows && rows.length > 0) {
+        await p.$executeRawUnsafe(`DELETE FROM Favorite WHERE id = ?`, rows[0].id);
+        return { success: true, action: 'removed' };
+      } else {
+        const id = randomUUID();
+        const now = new Date().toISOString();
+        await p.$executeRawUnsafe(
+          `INSERT INTO Favorite (id, userId, productId, type, createdAt) VALUES (?, ?, ?, ?, ?)`,
+          id, user.id, productId, type, now
+        );
+        return { success: true, action: 'added' };
+      }
+    }
+  } catch (error) {
+    console.error('Toggle favorite error:', error);
+    return { error: 'Xəta baş verdi.' };
+  }
+}
+
+export async function getUserFavorites(userEmail: string) {
+  try {
+    const p = prisma as any;
+    const userModel = p.user || p.User || p.users;
+    const favModel = p.favorite || p.Favorite;
+
+    const user = await userModel.findUnique({ where: { email: userEmail } });
+    if (!user) return { success: false, favorites: [] };
+
+    let favorites: any[] = [];
+    if (favModel) {
+      favorites = await favModel.findMany({ where: { userId: user.id }, orderBy: { createdAt: 'desc' } });
+    } else {
+      favorites = await p.$queryRawUnsafe(`SELECT * FROM Favorite WHERE userId = ? ORDER BY createdAt DESC`, user.id);
+    }
+
+    const propertyIds = favorites.filter((f: any) => f.type === 'property').map((f: any) => f.productId);
+    const vehicleIds = favorites.filter((f: any) => f.type === 'vehicle').map((f: any) => f.productId);
+
+    const [properties, vehicles] = await Promise.all([
+      propertyIds.length > 0
+        ? p.property.findMany({ where: { id: { in: propertyIds } } })
+        : Promise.resolve([]),
+      vehicleIds.length > 0
+        ? p.vehicle.findMany({ where: { id: { in: vehicleIds } } })
+        : Promise.resolve([]),
+    ]);
+
+    return {
+      success: true,
+      favorites,
+      properties,
+      vehicles,
+      favoriteIds: favorites.map((f: any) => f.productId),
+    };
+  } catch (error) {
+    console.error('Get favorites error:', error);
+    return { success: false, favorites: [], properties: [], vehicles: [], favoriteIds: [] };
+  }
+}
+
+export async function forgotPassword(email: string) {
+  try {
+    const normalizedEmail = email.toLowerCase().trim();
+    const p = prisma as any;
+    const userModel = p.user || p.User || p.users;
+
+    const user = await userModel.findUnique({ where: { email: normalizedEmail } });
+    if (!user) {
+      return { error: 'Bu e-poçt ünvanı ilə hesab tapılmadı.' };
+    }
+
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+
+    const tokenModel = p.passwordResetToken || p.PasswordResetToken;
+    if (tokenModel) {
+      await tokenModel.deleteMany({ where: { email: normalizedEmail } });
+      await tokenModel.create({
+        data: {
+          email: normalizedEmail,
+          token: code,
+          expiresAt,
+        }
+      });
+    } else {
+      const { randomUUID } = require('crypto');
+      const id = randomUUID();
+      const now = new Date().toISOString();
+      await p.$executeRawUnsafe(`DELETE FROM PasswordResetToken WHERE email = ?`, normalizedEmail);
+      await p.$executeRawUnsafe(
+        `INSERT INTO PasswordResetToken (id, email, token, expiresAt, used, createdAt) VALUES (?, ?, ?, ?, 0, ?)`,
+        id, normalizedEmail, code, expiresAt.toISOString(), now
+      );
+    }
+
+    await sendResetCodeEmail(normalizedEmail, code);
+
+    return { success: true };
+  } catch (error: any) {
+    console.error('Forgot password error:', error);
+    const msg = error?.message || '';
+    if (msg.includes('GMAIL_USER') || msg.includes('GMAIL_APP_PASSWORD')) {
+      return { error: 'E-poçt konfiqurasiyası tamamlanmayıb. (.env: GMAIL_USER, GMAIL_APP_PASSWORD)' };
+    }
+    if (msg.includes('Invalid login') || msg.includes('Username and Password not accepted')) {
+      return { error: 'Gmail giriş məlumatları yanlışdır. App Password düzgün daxil edilib?' };
+    }
+    if (msg.includes('ECONNREFUSED') || msg.includes('ETIMEDOUT') || msg.includes('ENOTFOUND')) {
+      return { error: 'Smtp serverinə qoşulmaq alınmadı. İnternet bağlantısını yoxlayın.' };
+    }
+    return { error: 'Kod göndərilərkən xəta baş verdi: ' + msg };
+  }
+}
+
+export async function verifyResetCode(email: string, code: string) {
+  try {
+    const normalizedEmail = email.toLowerCase().trim();
+    const p = prisma as any;
+    const tokenModel = p.passwordResetToken || p.PasswordResetToken;
+
+    let tokenRecord: any = null;
+
+    if (tokenModel) {
+      tokenRecord = await tokenModel.findFirst({
+        where: {
+          email: normalizedEmail,
+          token: code,
+          used: false,
+        }
+      });
+    } else {
+      const rows: any[] = await p.$queryRawUnsafe(
+        `SELECT * FROM PasswordResetToken WHERE email = ? AND token = ? AND used = 0 LIMIT 1`,
+        normalizedEmail, code
+      );
+      tokenRecord = rows && rows.length > 0 ? rows[0] : null;
+    }
+
+    if (!tokenRecord) {
+      return { error: 'Kod yanlışdır.' };
+    }
+
+    if (new Date() > new Date(tokenRecord.expiresAt)) {
+      return { error: 'Kodun vaxtı bitib. Yeni kod tələb edin.' };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Verify reset code error:', error);
+    return { error: 'Xəta baş verdi.' };
+  }
+}
+
+export async function resetPassword(email: string, code: string, newPassword: string) {
+  try {
+    const normalizedEmail = email.toLowerCase().trim();
+    const p = prisma as any;
+    const tokenModel = p.passwordResetToken || p.PasswordResetToken;
+    const userModel = p.user || p.User || p.users;
+
+    let tokenRecord: any = null;
+
+    if (tokenModel) {
+      tokenRecord = await tokenModel.findFirst({
+        where: {
+          email: normalizedEmail,
+          token: code,
+          used: false,
+        }
+      });
+    } else {
+      const rows: any[] = await p.$queryRawUnsafe(
+        `SELECT * FROM PasswordResetToken WHERE email = ? AND token = ? AND used = 0 LIMIT 1`,
+        normalizedEmail, code
+      );
+      tokenRecord = rows && rows.length > 0 ? rows[0] : null;
+    }
+
+    if (!tokenRecord) {
+      return { error: 'Kod yanlışdır və ya artıq istifadə olunub.' };
+    }
+
+    if (new Date() > new Date(tokenRecord.expiresAt)) {
+      return { error: 'Kodun vaxtı bitib. Yeni kod tələb edin.' };
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await userModel.update({
+      where: { email: normalizedEmail },
+      data: { password: hashedPassword }
+    });
+
+    if (tokenModel) {
+      await tokenModel.update({
+        where: { id: tokenRecord.id },
+        data: { used: true }
+      });
+    } else {
+      await p.$executeRawUnsafe(`UPDATE PasswordResetToken SET used = 1 WHERE id = ?`, tokenRecord.id);
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error('Reset password error:', error);
+    return { error: 'Şifrə yenilənərkən xəta baş verdi.' };
+  }
+}

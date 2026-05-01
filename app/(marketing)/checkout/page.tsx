@@ -95,7 +95,7 @@ function CheckoutContent() {
         if (res.success) {
            setIsSuccess(true);
            localStorage.removeItem("pendingCheckout");
-           // For rentals, we might still want to keep local record for UI sync
+           
            if (!isSale) {
               let reserved = [];
               const storedRes = localStorage.getItem(`reserved_${pendingData.productId}`);

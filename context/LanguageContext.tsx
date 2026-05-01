@@ -22,14 +22,14 @@ const dictionaries = { en, az, ru };
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
-  const [lang, setLangState] = useState<Language>("en"); // Demo default is English
+  const [lang, setLangState] = useState<Language>("en"); 
   const [mounted, setMounted] = useState(false);
   const [isChanging, setIsChanging] = useState(false);
   const [targetLang, setTargetLang] = useState<Language | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    // Check local storage on mount
+    
     const saved = localStorage.getItem("Valorum_lang") as Language;
     if (saved && dictionaries[saved]) {
       setLangState(saved);
@@ -43,13 +43,11 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
     setIsChanging(true);
     setTargetLang(newLang);
     
-    // Smooth transition
     setTimeout(() => {
       setLangState(newLang);
       localStorage.setItem("Valorum_lang", newLang);
-      router.push("/"); // Redirect to Home
+      router.push("/"); 
       
-      // Keep loading visible a bit for the transition effect
       setTimeout(() => {
         setIsChanging(false);
         setTargetLang(null);
@@ -114,7 +112,6 @@ export const LanguageProvider = ({ children }: { children: React.ReactNode }) =>
   );
 };
 
-
 export const useLanguage = () => {
   const context = useContext(LanguageContext);
   if (context === undefined) {
@@ -122,4 +119,3 @@ export const useLanguage = () => {
   }
   return context;
 };
-

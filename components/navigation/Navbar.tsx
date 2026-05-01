@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, X, ArrowUpRight, Globe } from "lucide-react";
+import { ArrowUpRight, Globe, Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -23,6 +23,7 @@ export default function Navbar() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState("https://ui-avatars.com/api/?name=User&background=004E64&color=fff");
+  const [favCount, setFavCount] = useState(0);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
@@ -47,19 +48,26 @@ export default function Navbar() {
     };
     window.addEventListener("avatarChanged", handleStorageSync);
     window.addEventListener("roleChanged", handleStorageSync);
+
+    const syncFavs = () => {
+      const stored = localStorage.getItem("favorites");
+      const ids: string[] = stored ? JSON.parse(stored) : [];
+      setFavCount(ids.length);
+    };
+    syncFavs();
+    window.addEventListener("favoritesChanged", syncFavs);
     
     return () => {
        window.removeEventListener("avatarChanged", handleStorageSync);
        window.removeEventListener("roleChanged", handleStorageSync);
+       window.removeEventListener("favoritesChanged", syncFavs);
     };
   }, [pathname]);
 
-  // Close menu on route change
   useEffect(() => {
     setIsOpen(false);
   }, [pathname]);
 
-  // Lock Body Scroll when Navbar Open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -68,11 +76,10 @@ export default function Navbar() {
     }
 
     return () => {
-      document.body.style.overflow = "unset"; // Cleanup
+      document.body.style.overflow = "unset"; 
     };
   }, [isOpen]);
 
-  // Hide Navbar completely on admin and auth routes
   if (
     pathname.startsWith("/dashboard") ||
     pathname === "/login" ||
@@ -81,7 +88,6 @@ export default function Navbar() {
     return null;
   }
 
-  // Animation variants
   const desktopMenuVariants = {
     closed: {
       clipPath: "circle(0px at 100vw 0px)",
@@ -136,7 +142,6 @@ export default function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-[130] px-6 md:px-12 py-6 flex justify-between items-center pointer-events-none">
-        {/* Left Logo */}
         <div className="pointer-events-auto">
           <Link href="/" className="flex items-center gap-3">
             <motion.div 
@@ -151,8 +156,7 @@ export default function Navbar() {
             </motion.span>
           </Link>
         </div>
-        {/* Right Hamburger Button ONLY */}
-        <div className="pointer-events-auto flex items-center gap-4">
+        <div className="pointer-events-auto flex items-center gap-3">
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="w-14 h-14 rounded-full bg-white/10 backdrop-blur-3xl border border-white/20 flex flex-col items-center justify-center gap-[5px] text-white hover:bg-white/20 transition-all focus:outline-none shadow-2xl relative z-[140]"
@@ -173,7 +177,6 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Full Screen Interactive Splash Menu */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -183,15 +186,13 @@ export default function Navbar() {
             variants={isMobile ? mobileMenuVariants : desktopMenuVariants}
             className={`fixed inset-0 z-[120] bg-[#0a0a09]/98 backdrop-blur-3xl flex flex-col ${isMobile ? 'justify-start py-28 pr-6 pl-12 sm:pl-20' : 'justify-start py-20 px-6 sm:px-12 md:px-24'} overflow-y-auto`}
           >
-            {/* Background Decor */}
             <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-[#004E64]/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute bottom-[-20%] left-[-10%] w-[50vw] h-[50vw] bg-[#004E64]/10 rounded-full blur-[120px] pointer-events-none" />
 
             <div className="flex flex-col lg:flex-row justify-between w-full max-w-7xl mx-auto items-start lg:items-center gap-12 lg:gap-10 relative z-10 pb-12">
               
-              {/* Massive Main Links */}
               <div className="flex flex-col gap-3 sm:gap-4 w-full lg:flex-1">
-                {NAV_LINKS.map((link, i) => {
+                {[...NAV_LINKS, ...(isLoggedIn ? [{ label: t.fav_title, href: '/favorites' }] : [])].map((link, i) => {
                   const isActive = pathname === link.href;
                   return (
                     <motion.div key={link.href} variants={itemVariants} className="overflow-hidden py-1">
@@ -215,7 +216,6 @@ export default function Navbar() {
                   )
                 })}
 
-                {/* Conditional Seller Menu */}
                 {isSeller && (
                     <motion.div variants={itemVariants} className="overflow-hidden py-1 mt-6 border-t border-white/10 pt-6">
                       <Link href="/seller" className="group flex flex-col items-start focus:outline-none">
@@ -229,7 +229,6 @@ export default function Navbar() {
                     </motion.div>
                 )}
                 
-                {/* Admin Panel Link */}
                 {isAdmin && (
                     <motion.div variants={itemVariants} className="overflow-hidden py-1 mt-6 border-t border-white/10 pt-6">
                       <Link href="/dashboard" className="group flex flex-col items-start focus:outline-none">
@@ -244,7 +243,6 @@ export default function Navbar() {
                 )}
               </div>
 
-              {/* Dynamic Auth / Identity Panel */}
               <motion.div variants={itemVariants} className="w-full lg:w-96 flex flex-col gap-8 items-start lg:items-end text-left lg:text-right">
                 
                 <h3 className="text-xl font-bold text-white mb-2">{t.nav_platform_access}</h3>
@@ -284,7 +282,6 @@ export default function Navbar() {
                   </div>
                 )}
                 
-                {/* Persistent In-Menu Language Switcher */}
                 <div className="flex items-center bg-white/5 backdrop-blur-xl border border-white/10 rounded-full p-2 mt-4 w-full justify-between">
                    <div className="text-xs font-bold text-slate-500 px-4 uppercase flex items-center gap-2"><Globe className="w-4 h-4"/> {t.nav_lang || "DİL"}</div>
                    <div className="flex gap-2">

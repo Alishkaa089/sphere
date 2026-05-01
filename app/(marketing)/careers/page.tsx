@@ -101,12 +101,9 @@ export default function CareersPage() {
   return (
     <div className="min-h-screen bg-[#0a0a09] text-white flex flex-col overflow-hidden">
 
-      {/* ── HERO ── */}
       <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
-        {/* Ambient glows */}
         <div className="absolute top-[-5%] left-[-10%] w-[600px] h-[600px] bg-[#004E64]/15 rounded-full blur-[160px]" />
         <div className="absolute bottom-0 right-[-5%] w-[500px] h-[500px] bg-violet-600/10 rounded-full blur-[150px]" />
-        {/* Dot grid */}
         <div className="absolute inset-0 opacity-[0.04]"
           style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "36px 36px" }} />
 
@@ -161,7 +158,6 @@ export default function CareersPage() {
             </a>
           </motion.div>
 
-          {/* floating stat chips */}
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             transition={{ delay: 0.9 }}
@@ -177,7 +173,6 @@ export default function CareersPage() {
         </div>
       </section>
 
-      {/* ── PERKS ── */}
       <section className="py-28 border-t border-white/5 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-[#004E64]/5 to-transparent pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 relative z-10">
@@ -210,7 +205,6 @@ export default function CareersPage() {
         </div>
       </section>
 
-      {/* ── CULTURE ── */}
       <section id="culture" className="py-28 border-t border-white/5 bg-zinc-900/20">
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
@@ -243,7 +237,6 @@ export default function CareersPage() {
         </div>
       </section>
 
-      {/* ── OPEN ROLES ── */}
       <section id="open-roles" className="py-28 border-t border-white/5">
         <div className="max-w-5xl mx-auto px-6">
           <motion.div
@@ -266,7 +259,6 @@ export default function CareersPage() {
                 viewport={{ once: true }} transition={{ duration: 0.5, delay: di * 0.1 }}
                 className="border border-white/8 rounded-3xl overflow-hidden bg-zinc-900/30 backdrop-blur-sm"
               >
-                {/* Dept Header */}
                 <button
                   onClick={() => setOpenDept(openDept === dept.id ? null : dept.id)}
                   className="w-full flex items-center justify-between px-8 py-6 hover:bg-white/3 transition-colors"
@@ -283,7 +275,6 @@ export default function CareersPage() {
                   <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${openDept === dept.id ? "rotate-180" : ""}`} />
                 </button>
 
-                {/* Positions */}
                 <AnimatePresence>
                   {openDept === dept.id && (
                     <motion.div
@@ -335,7 +326,6 @@ export default function CareersPage() {
         </div>
       </section>
 
-      {/* ── CTA ── */}
       <section className="py-32 border-t border-white/5 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#004E64]/8 via-transparent to-violet-900/5 pointer-events-none" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-[#004E64]/8 blur-[160px] rounded-full pointer-events-none" />
@@ -362,7 +352,6 @@ export default function CareersPage() {
 
       <Footer />
 
-      {/* ── APPLY MODAL ── */}
       <AnimatePresence>
         {applyModalOpen && (
           <motion.div

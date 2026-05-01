@@ -93,6 +93,25 @@ model ElitePartnerRequest {
   updatedAt DateTime @updatedAt
 }
 
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  productId String
+  type      String   // "property" | "vehicle"
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
 model JobApplication {
   id        String   @id @default(uuid())
   roleTitle String

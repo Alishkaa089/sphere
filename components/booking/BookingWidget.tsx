@@ -26,7 +26,7 @@ export default function BookingWidget({
 
   useEffect(() => {
     setIsClient(true);
-    // Fetch reserved dates for this product
+    
     if (product?.id) {
       getReservedDates(product.id).then(res => {
         if (res.success && res.reservedDates) {
@@ -218,7 +218,6 @@ export default function BookingWidget({
             {isSale ? t.btn_buy : t.btn_rent_now}
         </button>
 
-        {/* Calendar Modal */}
         <AnimatePresence>
           {showCalendar && (
             <motion.div 

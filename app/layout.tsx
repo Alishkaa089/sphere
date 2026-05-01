@@ -12,7 +12,6 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
-// A temporary Google Client ID for development purposes
 const GOOGLE_CLIENT_ID = "629516123194-8ib2e5fa1t0oasll19j3f35hemguqd84.apps.googleusercontent.com"; 
 
 export const metadata: Metadata = {

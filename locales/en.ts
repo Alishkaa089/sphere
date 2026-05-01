@@ -1,5 +1,5 @@
 export const en = {
-  // Navbar
+  
   nav_home: "Home Page",
   nav_property: "Property Catalog",
   nav_transport: "Transport Fleet",
@@ -13,7 +13,6 @@ export const en = {
   nav_login: "Log In",
   nav_lang: "LANGUAGE",
 
-  // Footer
   footer_desc: "Manage your limitless luxury lifestyle globally with engineering precision. Valorum – dare to own more.",
   footer_cat: "Catalog",
   footer_premium_prop: "Premium Properties",
@@ -28,11 +27,9 @@ export const en = {
   footer_email_ph: "Your E-mail address",
   footer_rights: "Valorum Inc. All rights reserved.",
 
-  // General Actions
   btn_back_home: "Back to Home",
   btn_logout: "Log Out",
   
-  // Home Page
   home_badge: "World of Limitless Luxury",
   home_title_1: "YOUR",
   home_title_2: "EXCEPTIONAL",
@@ -53,7 +50,6 @@ export const en = {
   home_trust_title: "Uncompromising Trust.",
   home_trust_desc: "Every product we lease is insured by Valorum's exclusive 100-point inspection. We guarantee your peace of mind unconditionally.",
 
-  // Catalog Pages
   cat_prop_badge: "Global Network",
   cat_prop_title: "Exclusive Properties.",
   cat_prop_desc: "A beautifully curated collection of premium real estate, managed seamlessly.",
@@ -66,7 +62,6 @@ export const en = {
   cat_loc_title: "Global Locations.",
   cat_loc_desc: "Discover where our luxury networks operate worldwide.",
 
-  // Additional Catalog UI bindings
   premium_property_badge: "Premium Real Estate",
   hero_title_part1: "Discover your",
   hero_title_part2: "dream home.",
@@ -90,7 +85,6 @@ export const en = {
   no_property_found_description: "has no listings matching your criteria.",
   reset_filters: "Reset Filters",
   
-  // Product Details & Booking Widget
   det_desc_title: "Description",
   det_specs_title: "Technical Specifications",
   det_inspect_badge: "Passed 100-Point Inspection",
@@ -121,7 +115,6 @@ export const en = {
   widget_total: "Final Amount",
   widget_auth_req: "To complete the order, please register or log in.",
 
-  // Auth / Profile
   auth_welcome: "Welcome",
   auth_create_account: "Create a New Account",
   auth_email: "E-Mail Address",
@@ -150,7 +143,6 @@ export const en = {
   prof_empty_title: "Nothing here yet",
   prof_empty_desc: "You haven't reserved any exclusive cars or purchased real estate yet.",
 
-  // Checkout
   checkout_title: "Payment Terminal",
   checkout_subtitle: "Secure payment via encrypted connection.",
   checkout_order_summary: "Order Summary",
@@ -185,7 +177,6 @@ export const en = {
   word_sec: "s",
   word_product: "items",
 
-  // Car Categories
   cat_all: "All Transport",
   cat_sports: "Sports Cars",
   cat_suv: "Premium SUV",
@@ -194,7 +185,6 @@ export const en = {
 
   select_country: "Select Country",
 
-  // Profile Additional
   prof_become_seller: "Become a Seller",
   prof_seller_active: "Seller Account Active",
   prof_seller_desc: "List your own properties and cars for sale or rent.",
@@ -207,7 +197,6 @@ export const en = {
   prof_order_type_sale: "Purchase",
   prof_order_type_rent: "Rental",
 
-  // Admin Dashboard
   admin_title: "General Dashboard",
   admin_subtitle: "Valorum global sales and rental statistics.",
   admin_live_data: "Live Data",
@@ -232,7 +221,6 @@ export const en = {
   admin_no_orders: "No real orders (reservations) recorded yet.",
   admin_no_orders_desc: "Once you purchase a product on the site, it will appear here.",
 
-  // Dashboard Sidebar
   side_dashboard: "General Panel",
   side_users: "Users Management",
   side_properties: "Properties",
@@ -244,7 +232,6 @@ export const en = {
   side_profile: "My Profile",
   side_logout: "Exit System",
 
-  // Admin Users Page
   admin_users_title: "Users Management",
   admin_users_subtitle: "All registered users on the platform.",
   admin_users_search_ph: "Search email or name...",
@@ -259,7 +246,6 @@ export const en = {
   admin_users_no_found: "No users found.",
   admin_users_role_error: "Could not update role.",
 
-  // Admin Properties Page
   admin_props_title: "All properties",
   admin_props_subtitle: "Manage {count} properties in the database.",
   admin_props_search_ph: "Search property...",
@@ -272,7 +258,6 @@ export const en = {
   admin_props_th_action: "Action",
   admin_props_no_found: "No properties found.",
 
-  // Admin Transports Page
   admin_trans_title: "All Vehicles",
   admin_trans_subtitle: "Manage {count} vehicles in the database.",
   admin_trans_search_ph: "Search vehicle...",
@@ -285,7 +270,6 @@ export const en = {
   admin_trans_th_action: "Action",
   admin_trans_no_found: "No vehicles found.",
 
-  // Admin Orders Page
   admin_orders_title: "Orders History",
   admin_orders_subtitle: "All real reservations and properties purchased.",
   admin_orders_search_ph: "Search Order ID...",
@@ -300,7 +284,6 @@ export const en = {
   admin_orders_type_sale: "One-Time Sale",
   admin_orders_status_all_ok: "Confirmed",
 
-  // Admin Settings Page
   admin_settings_title: "General Settings",
   admin_settings_subtitle: "Global platform configuration and architectural structure.",
   admin_settings_section_config: "Central Configuration",
@@ -317,7 +300,6 @@ export const en = {
   admin_settings_security_desc: "No unauthorized access detected. Database is operating with full guarantee.",
   admin_settings_logs_title: "System Logs",
 
-  // Admin Add Pages (Forms)
   admin_add_back: "Go Back",
   admin_add_prop_title: "Add New Property",
   admin_add_success_title: "Successfully Added!",
@@ -351,7 +333,6 @@ export const en = {
   admin_add_label_battery: "Battery / Range",
   admin_add_ph_battery: "e.g. 100 kWh / 500 km",
 
-  // Generic
   word_sale: "Sale",
   word_rent: "Rent",
   word_azerbaijan: "Azerbaijan",
@@ -363,7 +344,6 @@ export const en = {
   all_prop_cat_land: "Land Space",
   toast_error: "An error occurred.",
 
-  // Countries (Exhaustive)
   country_USA: "USA",
   country_Germany: "Germany",
   country_Australia: "Australia",
@@ -420,7 +400,6 @@ export const en = {
   country_Czech_Republic: "Czech Republic",
   country_China: "China",
 
-  // About Page
   about_badge: "About Valorum",
   about_hero_title_1: "STILL NO",
   about_hero_title_2: "HOME OR CAR?",
@@ -460,7 +439,6 @@ export const en = {
   about_cta_btn_reg: "Free Registration",
   about_cta_btn_cat: "View Catalog",
 
-  // Careers Page
   careers_badge: "Valorum Careers",
   careers_hero_title: "Build the future with us.",
   careers_hero_desc: "Valorum is a small, strong team building a global platform. Those who enter here are not just employees, they become founders.",
@@ -516,7 +494,6 @@ export const en = {
   careers_role_ops_1: "Real Estate Partnerships Lead",
   careers_role_ops_2: "Customer Success Manager",
 
-  // Partnership Page
   partner_badge: "B2B & Partnership",
   partner_hero_title_1: "Stronger ",
   partner_hero_title_2: "together.",
@@ -598,7 +575,6 @@ export const en = {
   partner_type_option_tech: "Technology Partner",
   partner_type_option_other: "Other",
 
-  // Showcase Component
   showcase_badge: "Interactive Discovery",
   showcase_title_1: "Scroll.",
   showcase_title_2: "Feel.",
@@ -619,7 +595,6 @@ export const en = {
   showcase_hint_3d: "3D • Hover",
   showcase_hint_mouse: "Hover with mouse — the cards will follow your lead",
 
-  // Plans & Limits
   limit_reached_title: "Limit Reached",
   limit_reached_desc: "You can post a maximum of 5 ads with your current plan. Please upgrade your plan for up to 50 ads.",
   btn_upgrade_plan: "Upgrade Plan",
@@ -628,5 +603,28 @@ export const en = {
   plan_benefit_pro: "Post up to 50 ads",
   upgrade_success: "Plan upgraded successfully!",
   current_plan: "Current Plan",
-  listings_usage: "Listings Usage"
+  listings_usage: "Listings Usage",
+
+  fav_title: "Favorites",
+  fav_my_products: "My Favorite Products",
+  fav_login_desc: "Log in to see your favorite products.",
+  fav_login_btn: "Log In",
+  fav_loading: "Loading...",
+  fav_saved_count: "items saved",
+  fav_none_selected: "No items selected yet.",
+  fav_tab_all: "All",
+  fav_tab_properties: "Properties",
+  fav_tab_vehicles: "Transport",
+  fav_empty_title: "Favorites is empty",
+  fav_empty_desc: "Browse properties or transport and tap the heart icon to save.",
+  fav_view_property: "Browse Properties",
+  fav_view_transport: "Browse Transport",
+  fav_section_properties: "Properties",
+  fav_section_vehicles: "Transport",
+  fav_sale_badge: "Sale",
+  fav_rent_badge: "Rent",
+  fav_lease_badge: "Lease",
+  fav_sale_price: "Sale Price",
+  fav_monthly_rent: "Monthly Rent",
+  fav_daily_rent: "Daily Rental"
 };

@@ -6,10 +6,11 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/Card";
 import Footer from "@/components/common/Footer";
 import Link from "next/link";
-import { Search, MapPin, BedDouble, Bath, Square, Star, Heart, Globe, ChevronDown, Map } from "lucide-react";
+import { Search, MapPin, BedDouble, Bath, Square, Star, Globe, ChevronDown, Map } from "lucide-react";
 import { UNIQUE_COUNTRIES, COUNTRY_CITIES } from "@/constants/countries";
 import { getProperties } from "@/lib/actions";
 import { useLanguage } from "@/context/LanguageContext";
+import FavoriteButton from "@/components/common/FavoriteButton";
 
 const CATEGORIES = ["Bütün Mülklər", "Premium Villalar", "Penthaus", "Ağıllı Evlər", "Dəniz Mənzərəli"];
 
@@ -95,7 +96,6 @@ export default function PropertyPage() {
   return (
     <div className="min-h-screen bg-[#0a0a09] flex flex-col relative overflow-hidden">
       
-      {/* ── Premium Hero Background Image ── */}
       <div className="absolute top-0 left-0 right-0 h-[75vh] z-0 overflow-hidden">
         <Image 
           src="/prop_v4.png"
@@ -111,7 +111,6 @@ export default function PropertyPage() {
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-32 pb-24 relative z-10">
         
-        {/* ── HERO CONTENT ── */}
         <div className="max-w-4xl mb-12 sm:mb-20 pt-10">
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
@@ -142,7 +141,6 @@ export default function PropertyPage() {
           </motion.p>
         </div>
 
-        {/* ── FLOATING GLASS SEARCH BAR ── */}
         <motion.div 
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -161,7 +159,6 @@ export default function PropertyPage() {
               />
             </div>
             
-            {/* Country Selector */}
             <div className="relative w-full md:w-56 z-50">
               <button 
                 onClick={() => {setIsCountryDropdownOpen(!isCountryDropdownOpen); setIsCityDropdownOpen(false)}}
@@ -203,7 +200,6 @@ export default function PropertyPage() {
               </AnimatePresence>
             </div>
 
-            {/* City Selector */}
             <div className="relative w-full md:w-56 z-40">
               <button 
                 disabled={selectedCountry === "Bütün Ölkələr"}
@@ -248,7 +244,6 @@ export default function PropertyPage() {
           </div>
         </motion.div>
 
-        {/* ── FILTER TOGGLES ── */}
         <div className="flex flex-col lg:flex-row justify-between items-center gap-4 mb-10 border-b border-white/5 pb-6">
           <div className="flex overflow-x-auto gap-3 pb-2 w-full lg:w-auto scrollbar-hide">
             {CATEGORIES.map((cat) => (
@@ -283,7 +278,6 @@ export default function PropertyPage() {
           </div>
         </div>
 
-        {/* ── PROPERTY GRID ── */}
         {filteredProperties.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProperties.map((prop, i) => {
@@ -316,9 +310,7 @@ export default function PropertyPage() {
                             <Globe className="w-3 h-3 text-[#00A3CC]" /> {getCountryLabel(prop.country)}
                           </div>
                         </div>
-                        <button className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 text-white hover:bg-white hover:text-red-500 transition-colors">
-                          <Heart className="w-4 h-4" />
-                        </button>
+                        <FavoriteButton productId={prop.id} type="property" />
                       </div>
 
                       <div className="absolute bottom-4 left-4 right-4 text-white">

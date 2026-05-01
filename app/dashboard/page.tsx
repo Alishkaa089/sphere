@@ -73,14 +73,12 @@ export default function AdminDashboardPage() {
                  <h4 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-1">{card.label}</h4>
                  <h2 className="text-3xl font-black text-white">{card.value}</h2>
                  
-                 {/* Internal Glow Hover Pattern */}
                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                </motion.div>
             ))}
          </div>
 
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Orders Table */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="col-span-1 lg:col-span-2 bg-black/30 border border-white/5 rounded-3xl p-8 relative overflow-hidden shadow-2xl flex flex-col h-[600px]">
                <div className="flex justify-between items-center mb-8">
                  <h3 className="text-lg font-black text-white uppercase tracking-widest flex items-center gap-3">
@@ -141,7 +139,6 @@ export default function AdminDashboardPage() {
                )}
             </motion.div>
 
-            {/* System Health */}
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }} className="bg-zinc-900 border border-white/5 rounded-3xl p-8 shadow-2xl flex flex-col justify-between h-[600px]">
                <div>
                   <h3 className="text-xl font-black text-white mb-8 pb-4 border-b border-white/5">{t.admin_sys_status}</h3>

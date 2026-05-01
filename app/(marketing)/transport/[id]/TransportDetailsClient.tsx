@@ -20,14 +20,12 @@ export default function TransportDetailsClient({ vehicle }: { vehicle: any }) {
   return (
     <div className="min-h-screen bg-[#0a0a09] text-white">
       
-      {/* Dynamic Header */}
       <div className="fixed top-0 left-0 right-0 z-50 px-6 py-6 md:px-12 pointer-events-none flex justify-between items-center">
         <Link href="/transport" className="pointer-events-auto w-12 h-12 bg-black/50 backdrop-blur-3xl border border-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all focus:outline-none shadow-2xl">
           <ArrowLeft className="w-5 h-5" />
         </Link>
       </div>
 
-      {/* Hero Visual Section */}
       <div className="relative h-[65vh] md:h-[80vh] w-full">
         <motion.img 
           initial={{ opacity: 0, scale: 1.05 }}
@@ -71,7 +69,6 @@ export default function TransportDetailsClient({ vehicle }: { vehicle: any }) {
         </div>
       </div>
 
-      {/* Overview & Core Specs */}
       <div className="max-w-7xl mx-auto px-6 lg:px-24 -mt-8 relative z-20 pb-24 grid grid-cols-1 lg:grid-cols-3 gap-12">
         <div className="lg:col-span-2">
             <motion.div 
@@ -128,7 +125,6 @@ export default function TransportDetailsClient({ vehicle }: { vehicle: any }) {
             </div>
         </div>
 
-        {/* -------------------- FLOATING BOOKING WIDGET -------------------- */}
         <div className="lg:col-span-1 relative">
            <div className="sticky top-12">
              <BookingWidget 

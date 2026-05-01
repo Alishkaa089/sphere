@@ -4,10 +4,10 @@ export interface Property {
   category: string;
   status: string;
   city: string;
-  loc?: string; // For backward compatibility in checkout
+  loc?: string; 
   country: string;
   price: number;
-  priceRaw?: number; // For backward compatibility in checkout
+  priceRaw?: number; 
   beds: number;
   baths: number;
   area: number;
@@ -21,10 +21,10 @@ export interface Vehicle {
   category: string;
   status: string;
   city: string;
-  loc?: string; // For backward compatibility
+  loc?: string; 
   country: string;
   price: number;
-  priceRaw?: number; // For backward compatibility in checkout
+  priceRaw?: number; 
   battery?: number;
   range?: number;
   power?: string;
@@ -42,8 +42,8 @@ export interface Order {
   end: string | null;
   totalDays: number;
   price: number;
-  totalPrice?: number; // Added for backward compatibility in dashboard
-  priceRaw?: number; // Added for backward compatibility in dashboard
+  totalPrice?: number; 
+  priceRaw?: number; 
   date: string;
 }
 

@@ -16,8 +16,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Social Login States
-  const [showAccountSelector, setShowAccountSelector] = useState(false); // Can be kept for custom feel or removed
+  const [showAccountSelector, setShowAccountSelector] = useState(false); 
   const [showSocialModal, setShowSocialModal] = useState(false);
   const [socialData, setSocialData] = useState<{ email: string; avatar?: string } | null>(null);
   const [fullName, setFullName] = useState("");
@@ -41,7 +40,7 @@ export default function LoginPage() {
       setSocialLoading(true);
       setError("");
       try {
-        // Fetch user profile from Google using the access token
+        
         const userInfoRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
           headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
         });
@@ -49,19 +48,18 @@ export default function LoginPage() {
         
         if (!userInfo.email) throw new Error("Email tapılmadı");
 
-        // Check if user already exists in DB
         const res = await checkSocialUser(userInfo.email);
         
         if (res.exists && res.user) {
           saveUserToLocal(res.user);
           router.push("/");
         } else {
-          // Trigger the Name Prompt Modal for new users
+          
           setSocialData({ 
              email: userInfo.email, 
              avatar: userInfo.picture || `https://ui-avatars.com/api/?name=${encodeURIComponent(userInfo.name || "User")}&background=004E64&color=fff` 
           });
-          setFullName(userInfo.name || ""); // Prefill if available
+          setFullName(userInfo.name || ""); 
           setShowSocialModal(true);
         }
       } catch (err) {
@@ -137,11 +135,9 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-[#0a0a09] flex flex-col items-center justify-center relative overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
       
-      {/* Abstract Glowing Background */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#004E64]/10 blur-[150px] rounded-full pointer-events-none" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] bg-[#004E64]/10 blur-[150px] rounded-full pointer-events-none" />
 
-      {/* Top Left Navigation Back */}
       <Link href="/" className="absolute top-8 left-8 flex items-center gap-2 text-slate-400 hover:text-white transition-colors z-20 group">
         <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
         <span className="font-bold">Ana Səhifəyə Qayıt</span>
@@ -221,7 +217,7 @@ export default function LoginPage() {
                 </button>
               </div>
               <div className="flex justify-end mt-2">
-                <Link href="#" className="text-sm font-bold text-[#00A3CC] hover:text-[#7FD4E8] transition-colors">Şifrəni unutmusunuz?</Link>
+                <Link href="/forgot-password" className="text-sm font-bold text-[#00A3CC] hover:text-[#7FD4E8] transition-colors">Şifrəni unutmusunuz?</Link>
               </div>
             </div>
 
@@ -257,7 +253,6 @@ export default function LoginPage() {
         </div>
       </motion.div>
 
-      {/* Social Register Modal */}
       <AnimatePresence>
         {showSocialModal && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
@@ -309,4 +304,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

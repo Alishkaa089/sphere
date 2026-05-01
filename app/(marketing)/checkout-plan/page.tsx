@@ -117,7 +117,6 @@ export default function CheckoutPlanPage() {
 
       <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-8 z-10">
         
-        {/* Payment Form */}
         <div className="bg-zinc-900/60 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 shadow-2xl">
           <div className="flex items-center gap-3 mb-8 pb-6 border-b border-white/10">
             <Lock className="w-6 h-6 text-[#00A3CC]" />
@@ -163,7 +162,6 @@ export default function CheckoutPlanPage() {
           </form>
         </div>
 
-        {/* Order Summary */}
         <div className="bg-zinc-900/60 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl flex flex-col">
           <div className="relative h-48 w-full bg-gradient-to-bl from-[#006B8A] to-[#00394A] flex items-center justify-center">
             <div className="text-5xl font-black text-white" style={{ fontFamily: "'Grailga', serif" }}>{t.plan_pro}</div>
