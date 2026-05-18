@@ -1,11 +1,7 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaLibSql } from '@prisma/adapter-libsql'
 import "dotenv/config";
 
-const adapter = new PrismaLibSql({
-  url: process.env.DATABASE_URL || "file:./dev.db",
-})
-const prisma = new PrismaClient({ adapter })
+const prisma = new PrismaClient()
 
 const UNIQUE_COUNTRIES = ["BƏƏ", "Türkiyə", "Qətər", "Azərbaycan"];
 const COUNTRY_CITIES: Record<string, string[]> = {
