@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@libsql/client": "^0.17.2",
+    "@neondatabase/serverless": "^1.1.0",
     "@prisma/adapter-libsql": "^7.6.0",
+    "@prisma/adapter-neon": "^7.8.0",
     "@prisma/client": "^7.6.0",
     "@radix-ui/react-slot": "^1.2.4",
     "@react-oauth/google": "^0.13.4",

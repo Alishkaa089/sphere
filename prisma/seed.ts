@@ -1,7 +1,11 @@
 import { PrismaClient } from '@prisma/client'
+import { PrismaNeon } from '@prisma/adapter-neon'
+import { Pool } from '@neondatabase/serverless'
 import "dotenv/config";
 
-const prisma = new PrismaClient()
+const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+const adapter = new PrismaNeon(pool)
+const prisma = new PrismaClient({ adapter })
 
 const UNIQUE_COUNTRIES = ["BƏƏ", "Türkiyə", "Qətər", "Azərbaycan"];
 const COUNTRY_CITIES: Record<string, string[]> = {
